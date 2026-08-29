@@ -28,19 +28,19 @@
       "bytes": 1027,
       "path": "captions/captions.ass",
       "role": "derived",
-      "sha256": "c92b5898b1521ee8dbfff5a3283adcb52fedddcb6a56e1f63d353bdbd6b0ba46"
+      "sha256": "bf4d372cce3473f3188618b1aa7cc75f05f133792535f59c77527b1ab0ca12f3"
     },
     {
       "bytes": 342,
       "path": "captions/captions.srt",
       "role": "derived",
-      "sha256": "c7942fd575b78c68196c01916253fa2c4c87bf77d8b2cabaf4cbe2ce1c750ec0"
+      "sha256": "8ccb4a81b038ac079b25f0b6b33918ee74b607cdb5d59209c2958e963eeb8005"
     },
     {
       "bytes": 398,
       "path": "captions/captions.vtt",
       "role": "derived",
-      "sha256": "f007427021003189a7f46f2ddf47a7abfc4006fe4abbb754edc3ab8c753d90d6"
+      "sha256": "0820638168249410495b7a2d3fa5e1916ef79dea02484657aee287375f20ba04"
     },
     {
       "bytes": 681,
@@ -52,61 +52,31 @@
       "bytes": 3311,
       "path": "events/events.ndjson",
       "role": "derived",
-      "sha256": "a65d3c837a8303e0c2749dae83fa029640c51c04269ba92bb8e92a0aadbe2a63"
+      "sha256": "2f3cb83aa4bcaccccca722a643b9d8811558f0fa3976f8e62b3764f55e7583d7"
     },
     {
       "bytes": 247,
       "path": "events/summary.json",
       "role": "derived",
-      "sha256": "d74d8d67376ef8b7edf6b0a964710c7a48d3bdf621f978f712e75b2b7b8d881b"
+      "sha256": "0178990247ab7345ee34ecee69e36eecc0e5dedda6b39394d514def0a23fcdf0"
     },
     {
-      "bytes": 469,
-      "path": "logs/ffmpeg-base.log",
-      "role": "derived",
-      "sha256": "767d848316d628e183cc81b232086526e91e49ef881e968572d7e57e838baf01"
-    },
-    {
-      "bytes": 333,
+      "bytes": 512,
       "path": "logs/ffmpeg-hard.log",
       "role": "derived",
-      "sha256": "397655cbd7e6043b205370b539620b6000a989ac433a5b6f419f8b7cb8a1eda2"
+      "sha256": "c17ac349809e70564fa6f7f5801a80789dc58b44a02a8eee5e4e65e291b0de14"
     },
     {
-      "bytes": 314,
-      "path": "logs/ffmpeg-soft.log",
-      "role": "derived",
-      "sha256": "3e685b7b485186045703f726ab0f7da4c6a4b272ba80a7d001de36492d43ac80"
-    },
-    {
-      "bytes": 2813,
-      "path": "logs/ffprobe-base.log",
-      "role": "derived",
-      "sha256": "769c18b0cdc84d823039abd0c1a72333c8d567c9a93340b618fb55eced580314"
-    },
-    {
-      "bytes": 2815,
+      "bytes": 2805,
       "path": "logs/ffprobe-hard.log",
       "role": "derived",
-      "sha256": "0a9162de18d48b9bfce2e1696f15294820ad0d07f7f32612105118fdb60d5676"
+      "sha256": "af3fa03cb35bf09be6293395b89e246de6332b087111592cc31b7f91c9054d39"
     },
     {
       "bytes": 2306,
       "path": "logs/ffprobe-raw.log",
       "role": "derived",
-      "sha256": "695502b9a98fd8a9f3526428eead1bd9e9150304a6f0ddb3e51a1aca6a88acb0"
-    },
-    {
-      "bytes": 453,
-      "path": "logs/ffprobe-soft-captions.log",
-      "role": "derived",
-      "sha256": "ba5d2f2f63113c4dfa868990a56fe0f3102aacfc26307fcccde0e0e627c7df6f"
-    },
-    {
-      "bytes": 4247,
-      "path": "logs/ffprobe-soft.log",
-      "role": "derived",
-      "sha256": "cefabf05f1409abb7ba07e9db610985cc88447ca06ab38d932b58380a3547966"
+      "sha256": "8472e5aab2d58827c3a4d9944e58e1f219808054102ebcfadac08fb5fb57e6f7"
     },
     {
       "bytes": 1,
@@ -115,40 +85,28 @@
       "sha256": "01ba4719c80b6fe911b091a7c05124b64eeece964e09c058ef8f9805daca546b"
     },
     {
-      "bytes": 126063,
-      "path": "output/demo-base.mp4",
+      "bytes": 161898,
+      "path": "output/demo.mp4",
       "role": "derived",
-      "sha256": "74d70255eb350be1c84e4cc27d4bb06ae36deff547b91e3044b224412e2f28f8"
+      "sha256": "a341155edebdc83ec3d6825c97926b3aa09134cb7141579dc7d99a8832f4d59d"
     },
     {
-      "bytes": 179188,
-      "path": "output/demo-hard.mp4",
-      "role": "derived",
-      "sha256": "c55132e929fa8e5ad9f25e97c390d1f4840190db5c9dbd4c527799a558d22c82"
-    },
-    {
-      "bytes": 126997,
-      "path": "output/demo-soft.mp4",
-      "role": "derived",
-      "sha256": "3a6bc8adcc748476ff62018de0c0abd28bb4c23e40ad432a13021e9f476a29ef"
-    },
-    {
-      "bytes": 2747,
+      "bytes": 2744,
       "path": "raw/frames.ndjson",
       "role": "derived",
-      "sha256": "ed392b7cca96241b4501b00c31dd04e3df6051195e41977154065855dedcd8a8"
+      "sha256": "aa68c6c3f8d80dce87d18497b98b57622301d9d775e59efdd546bfb89f29846a"
     },
     {
-      "bytes": 307651,
+      "bytes": 292610,
       "path": "raw/session.webm",
       "role": "source",
-      "sha256": "1657059f11504c5f7e4d44ef449aa36c07347f76593ee7129191b389953d08f8"
+      "sha256": "76617c9708f3eb5a6af8c1515a83c99fc9a4380a273d3a376a6f1f1c41609f0c"
     },
     {
-      "bytes": 3749,
+      "bytes": 4016,
       "path": "render/render-plan.json",
       "role": "derived",
-      "sha256": "29088238ba82645d82e62d5867ffe44e0a8691a37f16559ae0dd3ad35bef9ad2"
+      "sha256": "7849521d96ccc5fbcb265130ad4f17544baf5960ac002e38f19f86742648d12b"
     },
     {
       "bytes": 2716,
@@ -157,10 +115,10 @@
       "sha256": "d304a7725e6378d825aacecb8d44b2d4217d2c1a3419716018a6da4ce34981dd"
     },
     {
-      "bytes": 346281,
+      "bytes": 347697,
       "path": "trace/trace.zip",
       "role": "derived",
-      "sha256": "9b858718714d69cbc63fab5324b9a5c7aadc80b107183864f3480d36e6487af1"
+      "sha256": "e588a6f7b8f2b41879f0aa06d1697dd926ba678639f2fe816b1b0e9653655228"
     }
   ],
   "assertions": [

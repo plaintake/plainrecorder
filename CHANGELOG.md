@@ -12,9 +12,18 @@ First release.
 produces a narrated video. Steps, waits, masks and chapters are declared in the scenario; no
 recording is done by hand and no take is edited.
 
-**Output.** Every run produces `demo-base.mp4`, `demo-soft.mp4` (a selectable `mov_text`
-caption track) and `demo-hard.mp4` (captions burned in with libass), plus `captions.srt`,
-`captions.vtt` and `captions.ass`.
+**Output.** Every run produces one video, `demo.mp4`, plus `captions.srt`, `captions.vtt` and
+`captions.ass` beside it. Captions are burned in with libass by default, because PlainTake
+records silent video and no browser, Slack, X or LinkedIn renders an in-container caption
+track — a selectable track would leave the narration invisible where demos actually get
+watched. A licence can swap the burn-in for a `mov_text` track for the desktop players that do
+render one.
+
+Captions are white text on a slightly transparent dark plate, wrapped so the lines come out
+roughly even rather than one full line and one stray word. The plate is there because
+PlainTake mostly records light interfaces, where outlined text is hardest to read; measured on
+the bundled example, the weakest part of an outlined caption had a local contrast of 25
+against 170 for the plate.
 
 **An evidence bundle, not just a file.** Each recording keeps the scenario source, the raw
 capture, the Playwright trace, a semantic event timeline, the exact render plan, the toolchain

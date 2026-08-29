@@ -4,11 +4,11 @@ From the `create-api-key` example, recorded against the bundled demo app — so 
 reproduce it yourself with nothing but a PlainTake install:
 
 ```bash
-plaintake run create-api-key.demo.ts --output demo --fixture --subtitles both
+plaintake run create-api-key.demo.ts --output demo --fixture --subtitles hard
 ```
 
 **Stills, captions and the manifest — not the video.** Four frames extracted from
-`demo-hard.mp4`, the standalone SRT, and the manifest. An MP4 here would add megabytes and
+`demo.mp4`, the standalone SRT, and the manifest. An MP4 here would add megabytes and
 show nothing the frames do not.
 
 | File | Shows |
@@ -29,6 +29,17 @@ That is the difference between a mask and a blur. The mask is registered by CSS 
 *before* the element exists, so it covers the secret in every frame it could have appeared in.
 Nothing is removed after the fact, and there is no frame where the value was visible.
 
+## How the captions look
+
+White text on a dark plate, in the bottom safe area, wrapped so the lines come out roughly
+even. The plate is there because PlainTake mostly records light interfaces, and outlined text
+on a white page is hard to read no matter how thick the outline. It is slightly transparent,
+so the page still shows through and the caption reads as part of the video.
+
+Captions are burned into the pixels, which is what makes them show up in a browser, in Slack
+and in a muted autoplay embed. A licence also lets you export a selectable caption track
+instead, for desktop players.
+
 ## The closing card
 
 `04-outro-credit.png` is the free tier's card: three seconds, centred, on near-black. A licence
@@ -45,7 +56,7 @@ chapters and one without decode to identical frames. To see them, record with a 
 read them back:
 
 ```bash
-ffprobe -v error -show_chapters demo/output/demo-soft.mp4
+ffprobe -v error -show_chapters demo/output/demo.mp4
 ```
 
 These stills come from a **free tier** recording, so it has the credit card and no chapters.

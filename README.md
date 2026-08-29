@@ -1,4 +1,4 @@
-# PlainTake
+# PlainTake — demo videos you can re-run
 
 > Turns a committed TypeScript file into a narrated browser demo video — locally, with no
 > network at render time and nothing to sign up for.
@@ -12,14 +12,18 @@ it was made. Re-run it after a UI change and you get the same demo again, update
 
 Each run produces:
 
-- `demo-soft.mp4` — H.264 with a selectable caption track
-- `demo-hard.mp4` — H.264 with captions burned into the pixels
+- `demo.mp4` — one H.264 video, captions burned into the pixels. A licence can swap the
+  burn-in for a selectable caption track instead
 - `captions.srt`, `captions.vtt`, `captions.ass` — standalone caption files
 - an evidence bundle: the scenario source, the raw capture, a Playwright trace, the semantic
   event timeline, the exact render plan, the toolchain versions, and a SHA-256 manifest you
   can re-verify at any time
 
-The output is **silent video with text subtitles**. There is no audio and no text-to-speech.
+The output is **silent video with text subtitles**. There is no audio and no text-to-speech —
+which is why the captions are burned in. No browser renders an in-container caption track, and
+neither do Slack, X, LinkedIn or GitHub, so a selectable track would leave the narration
+invisible in exactly the places demo videos get shared. The `.srt` and `.vtt` files are written
+on every run, for a `<track>` tag or a translation source.
 
 ## What it looks like
 
@@ -146,8 +150,8 @@ exit — so an agent running `plaintake` never sits waiting on a prompt.
 ```
 plaintake validate <scenario.ts>
 plaintake run      <scenario.ts> --output <dir> (--base-url <url> | --fixture)
-                                  [--subtitles soft|hard|both]
-plaintake render   <bundleDir> [--subtitles soft|hard|both]
+                                  [--subtitles hard|soft]
+plaintake render   <bundleDir> [--subtitles hard|soft]
 plaintake verify   <bundleDir>
 plaintake inspect  <bundleDir>
 plaintake doctor
@@ -277,7 +281,7 @@ artifacts/create-api-key/
 ├── events/events.ndjson        what happened, and when
 ├── captions/captions.{srt,vtt,ass}
 ├── render/render-plan.json     the frozen plan, including the FFmpeg arguments used
-├── output/demo-{base,soft,hard}.mp4
+├── output/demo.mp4             the one video, in the mode you asked for
 ├── logs/                       one log per FFmpeg run
 ├── manifest.json               a SHA-256 of every file
 └── manifest.sha256             a hash of the manifest itself
@@ -300,6 +304,7 @@ Recordings panel in the menu is how you do that.
 | Closing credit card | 3s *Made with PlainTake* | removed |
 | Your own outro text and colours | ❌ | ✅ |
 | MP4 chapter markers from `demo.chapter()` | ❌ | ✅ |
+| Selectable caption track instead of burned-in | ❌ | ✅ |
 | Price | free | one-time, perpetual |
 
 **Buy a licence: [plainlab.gumroad.com/l/plaintake](https://plainlab.gumroad.com/l/plaintake)** —
@@ -311,6 +316,11 @@ install it on as many of your own machines as you need.
 
 **Chapter events are recorded on every tier.** Only the markers in the MP4 are withheld, so
 nothing is lost by recording on Free and activating later — re-render and the chapters appear.
+
+**The caption files are written on every tier** too. `captions.srt` and `captions.vtt` sit
+beside the video whatever you paid, so a `<track>` tag or a translation source needs no
+licence. What a licence buys is the track muxed *into* the MP4, for the desktop players that
+render one.
 
 **The videos are yours on both tiers.** No ownership claim, no licence back to us, no
 restriction on selling what you make. See [`LICENSE`](LICENSE) §3.
