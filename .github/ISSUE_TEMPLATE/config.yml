@@ -1,0 +1,12 @@
+# A blank issue almost always arrives without a version or an FFmpeg build, which is the
+# first thing anyone would have to ask for. The templates collect both.
+blank_issues_enabled: false
+contact_links:
+  - name: Buy a licence, or ask about a purchase or refund
+    url: https://plainlab.gumroad.com/l/plaintake
+    about: >
+      Payment, licence keys and refunds are handled by Gumroad. Please use the receipt email
+      from your purchase rather than a public issue, so your key stays private.
+  - name: Downloads
+    url: https://github.com/plaintake/plaintake/releases/latest
+    about: The latest release, with checksums and the installer.

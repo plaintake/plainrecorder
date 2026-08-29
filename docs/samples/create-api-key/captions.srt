@@ -1,0 +1,20 @@
+1
+00:00:00,019 --> 00:00:01,569
+Open the organization settings.
+
+2
+00:00:01,649 --> 00:00:02,999
+Go to the API Keys section.
+
+3
+00:00:03,079 --> 00:00:04,529
+Start creating a new API key.
+
+4
+00:00:04,609 --> 00:00:06,509
+Name the key so you can find it later.
+
+5
+00:00:06,589 --> 00:00:08,989
+Create a restricted API key for the
+integration.

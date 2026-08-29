@@ -1,0 +1,201 @@
+{
+  "artifacts": [
+    {
+      "bytes": 546,
+      "path": "assets/fontconfig/fonts.conf",
+      "role": "derived",
+      "sha256": "5a5e72392c665533ab3d75cc1def2c4fe0d4f8c92f7b61be06dd86b9ec392bc2"
+    },
+    {
+      "bytes": 621572,
+      "path": "assets/fonts/NotoSans-Regular.ttf",
+      "role": "source",
+      "sha256": "478c558ea716033cd60c03438f628dfa75694dcf6b5f6d505a2f05fd2b4f3823"
+    },
+    {
+      "bytes": 4396,
+      "path": "assets/fonts/OFL.txt",
+      "role": "derived",
+      "sha256": "cee9892f9f0cc8fe882c9e9537ee6a89621d86ee7ceaf70b02e2b2b1c25c061a"
+    },
+    {
+      "bytes": 161,
+      "path": "assets/fonts/checksums.txt",
+      "role": "derived",
+      "sha256": "427b3ac27c1cf1b6ac3cad0d1d84e11cac66f71e676d4dcea7ab5ff946324dc3"
+    },
+    {
+      "bytes": 1027,
+      "path": "captions/captions.ass",
+      "role": "derived",
+      "sha256": "c92b5898b1521ee8dbfff5a3283adcb52fedddcb6a56e1f63d353bdbd6b0ba46"
+    },
+    {
+      "bytes": 342,
+      "path": "captions/captions.srt",
+      "role": "derived",
+      "sha256": "c7942fd575b78c68196c01916253fa2c4c87bf77d8b2cabaf4cbe2ce1c750ec0"
+    },
+    {
+      "bytes": 398,
+      "path": "captions/captions.vtt",
+      "role": "derived",
+      "sha256": "f007427021003189a7f46f2ddf47a7abfc4006fe4abbb754edc3ab8c753d90d6"
+    },
+    {
+      "bytes": 681,
+      "path": "captions/outro.ass",
+      "role": "derived",
+      "sha256": "af2bd1585da5a96e9e7e00bada03fb7f142c659e91f169be920048ded4081e4a"
+    },
+    {
+      "bytes": 3311,
+      "path": "events/events.ndjson",
+      "role": "derived",
+      "sha256": "a65d3c837a8303e0c2749dae83fa029640c51c04269ba92bb8e92a0aadbe2a63"
+    },
+    {
+      "bytes": 247,
+      "path": "events/summary.json",
+      "role": "derived",
+      "sha256": "d74d8d67376ef8b7edf6b0a964710c7a48d3bdf621f978f712e75b2b7b8d881b"
+    },
+    {
+      "bytes": 469,
+      "path": "logs/ffmpeg-base.log",
+      "role": "derived",
+      "sha256": "767d848316d628e183cc81b232086526e91e49ef881e968572d7e57e838baf01"
+    },
+    {
+      "bytes": 333,
+      "path": "logs/ffmpeg-hard.log",
+      "role": "derived",
+      "sha256": "397655cbd7e6043b205370b539620b6000a989ac433a5b6f419f8b7cb8a1eda2"
+    },
+    {
+      "bytes": 314,
+      "path": "logs/ffmpeg-soft.log",
+      "role": "derived",
+      "sha256": "3e685b7b485186045703f726ab0f7da4c6a4b272ba80a7d001de36492d43ac80"
+    },
+    {
+      "bytes": 2813,
+      "path": "logs/ffprobe-base.log",
+      "role": "derived",
+      "sha256": "769c18b0cdc84d823039abd0c1a72333c8d567c9a93340b618fb55eced580314"
+    },
+    {
+      "bytes": 2815,
+      "path": "logs/ffprobe-hard.log",
+      "role": "derived",
+      "sha256": "0a9162de18d48b9bfce2e1696f15294820ad0d07f7f32612105118fdb60d5676"
+    },
+    {
+      "bytes": 2306,
+      "path": "logs/ffprobe-raw.log",
+      "role": "derived",
+      "sha256": "695502b9a98fd8a9f3526428eead1bd9e9150304a6f0ddb3e51a1aca6a88acb0"
+    },
+    {
+      "bytes": 453,
+      "path": "logs/ffprobe-soft-captions.log",
+      "role": "derived",
+      "sha256": "ba5d2f2f63113c4dfa868990a56fe0f3102aacfc26307fcccde0e0e627c7df6f"
+    },
+    {
+      "bytes": 4247,
+      "path": "logs/ffprobe-soft.log",
+      "role": "derived",
+      "sha256": "cefabf05f1409abb7ba07e9db610985cc88447ca06ab38d932b58380a3547966"
+    },
+    {
+      "bytes": 1,
+      "path": "logs/recorder.log",
+      "role": "derived",
+      "sha256": "01ba4719c80b6fe911b091a7c05124b64eeece964e09c058ef8f9805daca546b"
+    },
+    {
+      "bytes": 126063,
+      "path": "output/demo-base.mp4",
+      "role": "derived",
+      "sha256": "74d70255eb350be1c84e4cc27d4bb06ae36deff547b91e3044b224412e2f28f8"
+    },
+    {
+      "bytes": 179188,
+      "path": "output/demo-hard.mp4",
+      "role": "derived",
+      "sha256": "c55132e929fa8e5ad9f25e97c390d1f4840190db5c9dbd4c527799a558d22c82"
+    },
+    {
+      "bytes": 126997,
+      "path": "output/demo-soft.mp4",
+      "role": "derived",
+      "sha256": "3a6bc8adcc748476ff62018de0c0abd28bb4c23e40ad432a13021e9f476a29ef"
+    },
+    {
+      "bytes": 2747,
+      "path": "raw/frames.ndjson",
+      "role": "derived",
+      "sha256": "ed392b7cca96241b4501b00c31dd04e3df6051195e41977154065855dedcd8a8"
+    },
+    {
+      "bytes": 307651,
+      "path": "raw/session.webm",
+      "role": "source",
+      "sha256": "1657059f11504c5f7e4d44ef449aa36c07347f76593ee7129191b389953d08f8"
+    },
+    {
+      "bytes": 3749,
+      "path": "render/render-plan.json",
+      "role": "derived",
+      "sha256": "29088238ba82645d82e62d5867ffe44e0a8691a37f16559ae0dd3ad35bef9ad2"
+    },
+    {
+      "bytes": 2716,
+      "path": "scenario/scenario.ts",
+      "role": "source",
+      "sha256": "d304a7725e6378d825aacecb8d44b2d4217d2c1a3419716018a6da4ce34981dd"
+    },
+    {
+      "bytes": 346281,
+      "path": "trace/trace.zip",
+      "role": "derived",
+      "sha256": "9b858718714d69cbc63fab5324b9a5c7aadc80b107183864f3480d36e6487af1"
+    }
+  ],
+  "assertions": [
+    {
+      "id": "success-visible",
+      "status": "passed"
+    },
+    {
+      "id": "secret-masked",
+      "status": "passed"
+    }
+  ],
+  "environment": {
+    "architecture": "arm64",
+    "deviceScaleFactor": 1,
+    "locale": "en-US",
+    "os": "darwin",
+    "timezone": "UTC",
+    "viewport": [
+      1920,
+      1080
+    ]
+  },
+  "scenario": {
+    "id": "create-api-key",
+    "sourceSha256": "d304a7725e6378d825aacecb8d44b2d4217d2c1a3419716018a6da4ce34981dd"
+  },
+  "schema": "agent-demo.bundle/v1",
+  "status": "passed",
+  "toolchain": {
+    "chromiumRevision": "151.0.7922.34",
+    "ffmpeg": "9.0.1",
+    "fontSha256": "478c558ea716033cd60c03438f628dfa75694dcf6b5f6d505a2f05fd2b4f3823",
+    "libass": "0.17.5",
+    "node": "v24.14.1",
+    "playwright": "1.62.1"
+  }
+}

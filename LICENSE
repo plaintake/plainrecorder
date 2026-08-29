@@ -1,0 +1,137 @@
+PlainTake — Software Licence Agreement
+Copyright (c) 2026 PlainLab. All rights reserved.
+
+This is proprietary software. It is NOT open source. Your rights are limited to
+those granted below.
+
+By installing, copying, or using PlainTake ("the Software") you agree to
+these terms. If you do not agree, do not install or use the Software.
+
+
+1. DEFINITIONS
+
+   "Free Tier"  — the Software used without a valid Licence Key.
+   "Pro Tier"   — the Software used with a valid Licence Key issued by PlainLab.
+   "Licence Key"— a key issued to you on purchase, tied to your purchase record.
+   "Output"     — video, subtitle, and manifest files the Software produces.
+
+
+2. GRANT OF LICENCE
+
+   2.1 Free Tier. PlainLab grants you a perpetual, non-exclusive,
+       non-transferable licence to install and use the Software free of charge,
+       for any purpose including commercial use, subject to section 4.
+
+   2.2 Pro Tier. On purchase of a Licence Key, the grant in 2.1 is extended for
+       the features that key unlocks. The Pro Tier grant is perpetual for the
+       version range stated at the time of purchase, non-exclusive, and
+       non-transferable.
+
+   2.3 You may install the Software on as many machines as you personally, or
+       your organisation, need in order to use it. PlainLab does not meter this.
+
+
+3. YOUR OUTPUT IS YOURS
+
+   PlainLab claims no ownership of, and no licence to, any Output you produce.
+   You may use, publish, and sell your Output freely. Nothing in this agreement
+   restricts what you do with the videos you make.
+
+
+4. ATTRIBUTION IN THE FREE TIER
+
+   4.1 The Free Tier appends a short closing credit to the video it produces.
+
+   4.2 You must not remove, obscure, alter, shorten, or otherwise defeat that
+       credit while using the Free Tier, whether by modifying the Software,
+       altering its configuration or data files, post-processing the Output, or
+       any other means.
+
+   4.3 To produce video without the credit, or with your own branding, purchase
+       a Licence Key.
+
+
+5. RESTRICTIONS
+
+   You must not:
+
+   5.1 redistribute, resell, sublicense, rent, lease, or publish the Software or
+       any part of it, whether alone or bundled with anything else;
+
+   5.2 reverse engineer, decompile, or disassemble the Software, or attempt to
+       derive its source code, except to the minimum extent that applicable law
+       expressly permits notwithstanding this restriction;
+
+   5.3 circumvent, disable, or tamper with the licence check or the attribution
+       described in section 4;
+
+   5.4 share, publish, or resell a Licence Key, or use one you did not obtain
+       legitimately;
+
+   5.5 remove or alter any copyright, trademark, or attribution notice in the
+       Software or its documentation.
+
+
+6. THIRD-PARTY COMPONENTS
+
+   The Software ships with, invokes, or depends on third-party software licensed
+   separately, including Playwright (Apache-2.0) and the Noto Sans typeface
+   (SIL Open Font License 1.1), and it invokes FFmpeg as a separate executable
+   that you install yourself. Those components are governed by their own
+   licences, which this agreement does not modify or override. See NOTICE.md.
+
+
+7. TERMINATION
+
+   7.1 This licence terminates automatically if you materially breach it,
+       including any breach of section 4 or 5.
+
+   7.2 On termination you must stop using the Software and delete your copies.
+
+   7.3 Section 3 survives termination: Output you already produced remains
+       yours.
+
+
+8. NO WARRANTY
+
+   THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+   IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+   FITNESS FOR A PARTICULAR PURPOSE, AND NONINFRINGEMENT.
+
+   The Software executes scenario files as code and drives a web browser. You
+   are responsible for what you point it at and what those files do.
+
+
+9. LIMITATION OF LIABILITY
+
+   TO THE MAXIMUM EXTENT PERMITTED BY LAW, PLAINLAB SHALL NOT BE LIABLE FOR ANY
+   CLAIM, DAMAGES, OR OTHER LIABILITY, WHETHER IN CONTRACT, TORT, OR OTHERWISE,
+   ARISING FROM OR IN CONNECTION WITH THE SOFTWARE OR ITS USE. IN NO EVENT
+   SHALL PLAINLAB'S TOTAL LIABILITY EXCEED THE AMOUNT YOU PAID FOR THE
+   SOFTWARE IN THE TWELVE MONTHS PRECEDING THE CLAIM.
+
+   Some jurisdictions do not allow the exclusion of certain warranties or the
+   limitation of certain liabilities. Where that is the case, the above applies
+   to the maximum extent permitted, and your statutory rights are unaffected.
+
+
+10. PATENTS AND CODECS
+
+   The Software produces H.264/AVC video using an FFmpeg binary that you
+   install. H.264 is covered by patents administered through a patent pool.
+   PlainLab makes no representation that any particular use is
+   patent-unencumbered, and grants no patent licence in respect of codecs. See
+   NOTICE.md.
+
+
+11. GENERAL
+
+   11.1 This agreement is the entire agreement between you and PlainLab
+        regarding the Software.
+
+   11.2 If any provision is held unenforceable, the remainder stays in effect.
+
+   11.3 PlainLab's failure to enforce a provision is not a waiver of it.
+
+
+Contact: https://github.com/plainlab/plaintake

@@ -1,0 +1,63 @@
+name: Something is broken
+description: A crash, a wrong video, a failed verification, or an install that will not work.
+labels: [bug]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thank you for taking the time. The two commands below answer most of what would
+        otherwise be a round of questions — please run them rather than describing your setup
+        from memory.
+
+        **Purchases, licence keys and refunds** are handled by Gumroad, not here:
+        https://plainlab.gumroad.com/l/plaintake
+
+  - type: textarea
+    id: doctor
+    attributes:
+      label: Output of `plaintake doctor --json`
+      description: >
+        This names your PlainTake version, your FFmpeg and ffprobe, whether libass and
+        x264 are present, and which filters are available. Most install problems are visible
+        in it directly.
+      render: json
+    validations:
+      required: true
+
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: What happened, and what you expected instead
+    validations:
+      required: true
+
+  - type: textarea
+    id: reproduce
+    attributes:
+      label: The exact command you ran
+      description: >
+        Including the scenario file if you can share it. If the problem is in a recording you
+        already have, `plaintake inspect <dir> --json` and `plaintake verify <dir>` are
+        both useful here.
+      render: shell
+    validations:
+      required: true
+
+  - type: dropdown
+    id: platform
+    attributes:
+      label: Platform
+      options:
+        - macOS, Apple Silicon
+        - Linux x64
+        - Other (please say which, in the description)
+    validations:
+      required: true
+
+  - type: input
+    id: install-method
+    attributes:
+      label: How you installed
+      placeholder: install.sh from the release, or extracted the tarball by hand
+    validations:
+      required: false
