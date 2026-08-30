@@ -52,7 +52,7 @@
         "name": "PlainTake",
         "applicationCategory": "DeveloperApplication",
         "operatingSystem": "macOS, Linux",
-        "softwareVersion": "0.1.0",
+        "softwareVersion": "0.2.0",
         "description": "A local developer tool that records replayable Chromium demo videos from TypeScript scenarios and renders captioned MP4 files with FFmpeg.",
         "url": "https://plaintake.github.io/",
         "downloadUrl": "https://github.com/plaintake/plaintake/releases/latest",
@@ -62,6 +62,8 @@
           "TypeScript scenario DSL",
           "1920 by 1080 Chromium capture",
           "Burned-in and sidecar captions",
+          "Synthetic cursor and target-driven camera",
+          "Human-in-the-loop browser handoff",
           "Playwright trace and semantic event timeline",
           "SHA-256 artifact manifest",
           "Local CLI and MCP server"
@@ -102,7 +104,7 @@
             <a class="button button--primary button--small" href="https://github.com/plaintake/plaintake/releases/latest">Download</a>
           </nav>
 
-          <a class="button button--primary button--small nav__mobile-cta" href="https://github.com/plaintake/plaintake/releases/latest" aria-label="Download PlainTake 0.1.0">Download</a>
+          <a class="button button--primary button--small nav__mobile-cta" href="https://github.com/plaintake/plaintake/releases/latest" aria-label="Download PlainTake 0.2.0">Download</a>
         </div>
       </header>
 
@@ -118,7 +120,7 @@
               <span aria-hidden="true" data-type-command="plaintake run demo.ts --base-url http://localhost:3000"></span>
             </p>
             <div class="hero__actions">
-              <a class="button button--primary" href="https://github.com/plaintake/plaintake/releases/latest">Download 0.1.0</a>
+              <a class="button button--primary" href="https://github.com/plaintake/plaintake/releases/latest">Download 0.2.0</a>
               <a class="button" href="https://plainlab.gumroad.com/l/plaintake">Buy Pro</a>
             </div>
             <p class="hero__note">Free for commercial use. No account. No cloud renderer.</p>
@@ -137,13 +139,13 @@
               preload="metadata"
               poster="assets/demo-poster.webp"
               fetchpriority="high"
-              aria-label="PlainTake recording of a browser flow that creates and masks an API key"
+              aria-label="PlainTake recording of a release flow with a synthetic cursor, camera zoom, and human approval"
             >
               <source src="assets/demo.mp4" type="video/mp4" />
               <track kind="captions" src="assets/demo.vtt" srclang="en" label="English" />
             </video>
             <figcaption class="sr-only">
-              A twelve-second PlainTake demo recorded at 1920 by 1080 and 30 frames per second, with hard captions, a synthetic cursor, and a masked credential.
+              An eighteen-second PlainTake demo recorded at 1920 by 1080 and 30 frames per second, with hard captions, a synthetic cursor, target-driven camera zoom, and a human approval handoff.
             </figcaption>
           </figure>
         </section>
@@ -270,7 +272,7 @@
             <div class="privacy-copy">
               <h2>Private input stays outside the recording path.</h2>
               <p>
-                Register a CSS mask before a sensitive element exists. For apps behind a login, pre-flight handoff gives you the real browser before video and tracing begin. You type the credential in the browser; PlainTake never receives it as a terminal value.
+                Register a CSS mask before a sensitive element exists. For apps behind a login, pre-flight handoff gives you the real browser before video and tracing begin; a session handoff can keep a human decision in the recorded flow. You act in the browser, and PlainTake never receives a secret as a terminal value.
               </p>
               <a class="button tier__action" href="https://github.com/plaintake/plaintake#demos-that-need-a-person">Read the handoff guide</a>
             </div>
@@ -320,6 +322,7 @@
               <li>Remove the PlainTake closing credit</li>
               <li>Set your own outro text and colours</li>
               <li>Add MP4 chapter markers and a selectable caption track</li>
+              <li>Zoom the camera toward each declared step target</li>
             </ul>
             <a class="button button--primary tier__action" href="https://plainlab.gumroad.com/l/plaintake">Buy Pro</a>
           </article>
@@ -356,7 +359,7 @@
         <div class="container">
           <p class="footer__statement">A demo should be evidence, not a memory.</p>
           <div class="footer__meta">
-            <span>PlainTake 0.1.0 · Proprietary licence · Your output remains yours.</span>
+            <span>PlainTake 0.2.0 · Proprietary licence · Your output remains yours.</span>
             <nav class="footer__links" aria-label="Footer navigation">
               <a href="https://github.com/plaintake/plaintake/releases/latest">Releases</a>
               <a href="https://github.com/plaintake/plaintake#readme">Guide</a>

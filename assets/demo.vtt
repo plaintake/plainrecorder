@@ -1,22 +1,36 @@
 WEBVTT
 
-open-settings
-00:00:00.026 --> 00:00:01.609
-Open the organization settings.
+open-release-desk
+00:00:00.000 --> 00:00:02.550
+Start with the release
+workspace in a real browser.
 
-open-api-keys
-00:00:01.689 --> 00:00:03.039
-Go to the API Keys section.
+prepare-release
+00:00:02.630 --> 00:00:05.230
+The synthetic pointer moves
+to each declared target.
 
-start-create
-00:00:03.119 --> 00:00:04.569
-Start creating a new API key.
+enter-version
+00:00:05.310 --> 00:00:07.610
+Camera zoom follows the
+same target rectangle.
 
-fill-name
-00:00:04.649 --> 00:00:06.549
-Name the key so you can find it later.
+request-approval
+00:00:07.690 --> 00:00:09.990
+Submit the release for
+a final human decision.
 
-submit
-00:00:06.629 --> 00:00:09.029
-Create a restricted API
-key for the integration.
+frame-human-review
+00:00:10.070 --> 00:00:12.470
+PlainTake hands the visible
+browser to a person.
+
+approve-release
+00:00:12.550 --> 00:00:15.550
+The person approves, and the
+recorded scenario can continue.
+
+show-approved-state
+00:00:15.630 --> 00:00:17.980
+The final state is visible
+and ready to verify.
