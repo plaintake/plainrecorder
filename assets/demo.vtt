@@ -1,0 +1,22 @@
+WEBVTT
+
+open-settings
+00:00:00.026 --> 00:00:01.609
+Open the organization settings.
+
+open-api-keys
+00:00:01.689 --> 00:00:03.039
+Go to the API Keys section.
+
+start-create
+00:00:03.119 --> 00:00:04.569
+Start creating a new API key.
+
+fill-name
+00:00:04.649 --> 00:00:06.549
+Name the key so you can find it later.
+
+submit
+00:00:06.629 --> 00:00:09.029
+Create a restricted API
+key for the integration.

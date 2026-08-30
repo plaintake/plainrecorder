@@ -1,0 +1,416 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>PlainTake — Local Browser Demo Video Recorder</title>
+    <meta
+      name="description"
+      content="Record deterministic browser demo videos from TypeScript scenarios. PlainTake runs locally, renders with FFmpeg, burns in captions, and produces a verifiable evidence bundle."
+    />
+    <meta
+      name="keywords"
+      content="browser demo recorder, automated product demo, Playwright video recorder, TypeScript demo scenarios, local screen recorder, developer tool demo video, FFmpeg subtitles"
+    />
+    <meta name="author" content="PlainTake" />
+    <meta name="robots" content="index, follow, max-image-preview:large, max-video-preview:-1" />
+    <meta name="theme-color" content="#202a34" />
+    <link rel="canonical" href="https://plaintake.github.io/" />
+    <link rel="icon" href="assets/logo.svg" type="image/svg+xml" />
+    <link rel="apple-touch-icon" href="assets/logo.png" />
+    <link rel="manifest" href="site.webmanifest" />
+    <link rel="stylesheet" href="styles.css" />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="PlainTake" />
+    <meta property="og:title" content="PlainTake — Demo videos you can re-run" />
+    <meta
+      property="og:description"
+      content="Turn a committed TypeScript scenario into a captioned browser demo and a SHA-256-verifiable evidence bundle—locally."
+    />
+    <meta property="og:url" content="https://plaintake.github.io/" />
+    <meta property="og:image" content="https://plaintake.github.io/assets/logo.png" />
+    <meta property="og:image:width" content="600" />
+    <meta property="og:image:height" content="600" />
+    <meta property="og:image:alt" content="PlainTake browser recording mark" />
+    <meta property="og:video" content="https://plaintake.github.io/assets/demo.mp4" />
+    <meta property="og:video:type" content="video/mp4" />
+    <meta property="og:video:width" content="1920" />
+    <meta property="og:video:height" content="1080" />
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:title" content="PlainTake — Demo videos you can re-run" />
+    <meta
+      name="twitter:description"
+      content="Local browser demo recording from committed TypeScript scenarios, with captions and verifiable artifacts."
+    />
+    <meta name="twitter:image" content="https://plaintake.github.io/assets/logo.png" />
+
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "SoftwareApplication",
+        "name": "PlainTake",
+        "applicationCategory": "DeveloperApplication",
+        "operatingSystem": "macOS, Linux",
+        "softwareVersion": "0.1.0",
+        "description": "A local developer tool that records replayable Chromium demo videos from TypeScript scenarios and renders captioned MP4 files with FFmpeg.",
+        "url": "https://plaintake.github.io/",
+        "downloadUrl": "https://github.com/plaintake/plaintake/releases/latest",
+        "license": "https://github.com/plaintake/plaintake/blob/main/LICENSE",
+        "isAccessibleForFree": true,
+        "featureList": [
+          "TypeScript scenario DSL",
+          "1920 by 1080 Chromium capture",
+          "Burned-in and sidecar captions",
+          "Playwright trace and semantic event timeline",
+          "SHA-256 artifact manifest",
+          "Local CLI and MCP server"
+        ],
+        "offers": {
+          "@type": "Offer",
+          "price": "0",
+          "priceCurrency": "USD",
+          "url": "https://github.com/plaintake/plaintake/releases/latest"
+        }
+      }
+    </script>
+    <script src="script.js" defer></script>
+  </head>
+  <body>
+    <a class="skip-link" href="#main">Skip to content</a>
+
+    <div id="site-shell">
+      <header class="nav">
+        <div class="nav__inner container">
+          <a class="brand" href="#top" aria-label="PlainTake home">
+            <span class="brand__mark" aria-hidden="true"></span>
+            <span>PlainTake</span>
+          </a>
+
+          <button class="search-pill" id="command-trigger" type="button" aria-haspopup="dialog">
+            <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+              <circle cx="11" cy="11" r="7" stroke="currentColor" stroke-width="2" />
+              <path d="m20 20-4-4" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+            </svg>
+            <span class="search-pill__text">Find on this page</span>
+            <kbd>⌘K</kbd>
+          </button>
+
+          <nav class="nav__links" aria-label="Primary navigation">
+            <a class="nav__link" href="#workflow">Workflow</a>
+            <a class="nav__link" href="#free-pro">Free &amp; Pro</a>
+            <a class="button button--primary button--small" href="https://github.com/plaintake/plaintake/releases/latest">Download</a>
+          </nav>
+
+          <a class="button button--primary button--small nav__mobile-cta" href="https://github.com/plaintake/plaintake/releases/latest" aria-label="Download PlainTake 0.1.0">Download</a>
+        </div>
+      </header>
+
+      <main id="main">
+        <section class="hero container" id="top">
+          <div class="hero__copy">
+            <h1>Replayable demos, recorded locally.</h1>
+            <p class="hero__lede">
+              PlainTake turns a committed TypeScript scenario into one captioned MP4 and a verifiable evidence bundle. Chromium records it. FFmpeg renders it. Your app stays on your machine.
+            </p>
+            <p class="hero__command">
+              <span class="sr-only">plaintake run demo.ts --base-url http://localhost:3000</span>
+              <span aria-hidden="true" data-type-command="plaintake run demo.ts --base-url http://localhost:3000"></span>
+            </p>
+            <div class="hero__actions">
+              <a class="button button--primary" href="https://github.com/plaintake/plaintake/releases/latest">Download 0.1.0</a>
+              <a class="button" href="https://plainlab.gumroad.com/l/plaintake">Buy Pro</a>
+            </div>
+            <p class="hero__note">Free for commercial use. No account. No cloud renderer.</p>
+          </div>
+
+          <figure class="demo-frame" data-reveal>
+            <video
+              id="product-demo"
+              width="1920"
+              height="1080"
+              autoplay
+              muted
+              loop
+              playsinline
+              controls
+              preload="metadata"
+              poster="assets/demo-poster.webp"
+              fetchpriority="high"
+              aria-label="PlainTake recording of a browser flow that creates and masks an API key"
+            >
+              <source src="assets/demo.mp4" type="video/mp4" />
+              <track kind="captions" src="assets/demo.vtt" srclang="en" label="English" />
+            </video>
+            <figcaption class="sr-only">
+              A twelve-second PlainTake demo recorded at 1920 by 1080 and 30 frames per second, with hard captions, a synthetic cursor, and a masked credential.
+            </figcaption>
+          </figure>
+        </section>
+
+        <section class="container" aria-label="Recording facts">
+          <div class="proof-strip">
+            <div class="proof">
+              <span class="proof__value">1920 × 1080</span>
+              <span class="proof__label">fixed Chromium canvas</span>
+            </div>
+            <div class="proof">
+              <span class="proof__value">30 fps</span>
+              <span class="proof__label">constant video rate</span>
+            </div>
+            <div class="proof">
+              <span class="proof__value">1 MP4</span>
+              <span class="proof__label">unambiguous deliverable</span>
+            </div>
+            <div class="proof">
+              <span class="proof__value">Offline</span>
+              <span class="proof__label">record and render path</span>
+            </div>
+          </div>
+        </section>
+
+        <section class="section section--tight container" id="workflow">
+          <div class="section-head">
+            <h2>One file in. One proof bundle out.</h2>
+            <p>
+              The scenario names the actions, narration, assertions, pauses, privacy masks, and chapters. A run captures what happened and freezes everything needed to inspect or re-render it.
+            </p>
+          </div>
+        </section>
+
+        <section class="workbench-band">
+          <div class="workbench-grid container">
+            <div class="workbench-copy">
+              <h2>The scenario is the edit.</h2>
+              <p>Review the same TypeScript you commit. There is no visual timeline to drift from the product.</p>
+              <pre class="code-sample" aria-label="PlainTake TypeScript scenario example"><code><span class="tok-command">await</span> demo.step({
+  id: <span class="tok-string">'create-key'</span>,
+  subtitle: <span class="tok-string">'Create a restricted API key.'</span>,
+  target: page.getByRole(<span class="tok-string">'button'</span>, {
+    name: <span class="tok-string">'Create key'</span>,
+  }),
+  action: <span class="tok-string">'click'</span>,
+  run: () =&gt; page.getByRole(<span class="tok-string">'button'</span>, {
+    name: <span class="tok-string">'Create key'</span>,
+  }).click(),
+});</code></pre>
+            </div>
+
+            <ol class="workflow-list">
+              <li>
+                <div>
+                  <strong>Validate before Chromium starts</strong>
+                  <span>Schema and scenario errors fail early, before recording time is spent.</span>
+                </div>
+              </li>
+              <li>
+                <div>
+                  <strong>Record the semantic timeline</strong>
+                  <span>Steps, narration, assertions, masks, and cursor targets stay aligned to one monotonic clock.</span>
+                </div>
+              </li>
+              <li>
+                <div>
+                  <strong>Render once with FFmpeg</strong>
+                  <span>Hard captions are the default, with SRT and VTT sidecars always included.</span>
+                </div>
+              </li>
+              <li>
+                <div>
+                  <strong>Verify every artifact</strong>
+                  <span>A SHA-256 manifest makes changed, missing, or substituted files visible.</span>
+                </div>
+              </li>
+            </ol>
+          </div>
+        </section>
+
+        <section class="section container" id="specification">
+          <div class="section-head">
+            <h2>A recorder with a narrow contract.</h2>
+            <p>PlainTake chooses repeatability over knobs. The constraints are visible and testable.</p>
+          </div>
+
+          <dl class="spec-sheet">
+            <div class="spec-row">
+              <dt>Browser</dt>
+              <dd>One Chromium context, one active page</dd>
+              <dd class="spec-note">Playwright 1.62.1</dd>
+            </div>
+            <div class="spec-row">
+              <dt>Canvas</dt>
+              <dd>1920 × 1080 at DPR 1</dd>
+              <dd class="spec-note">asserted per frame</dd>
+            </div>
+            <div class="spec-row">
+              <dt>Video</dt>
+              <dd>30 fps H.264 MP4</dd>
+              <dd class="spec-note">one <code>output/demo.mp4</code></dd>
+            </div>
+            <div class="spec-row">
+              <dt>Captions</dt>
+              <dd>Hard-burned by default; SRT and VTT sidecars</dd>
+              <dd class="spec-note">silent video by design</dd>
+            </div>
+            <div class="spec-row">
+              <dt>Renderer</dt>
+              <dd>FFmpeg with libass and deterministic arguments</dd>
+              <dd class="spec-note">no cloud render</dd>
+            </div>
+            <div class="spec-row">
+              <dt>Interfaces</dt>
+              <dd>Interactive terminal, CLI, and local stdio MCP server</dd>
+              <dd class="spec-note">no account required</dd>
+            </div>
+          </dl>
+        </section>
+
+        <section class="section container" id="privacy">
+          <div class="privacy-grid">
+            <div class="privacy-copy">
+              <h2>Private input stays outside the recording path.</h2>
+              <p>
+                Register a CSS mask before a sensitive element exists. For apps behind a login, pre-flight handoff gives you the real browser before video and tracing begin. You type the credential in the browser; PlainTake never receives it as a terminal value.
+              </p>
+              <a class="button tier__action" href="https://github.com/plaintake/plaintake#demos-that-need-a-person">Read the handoff guide</a>
+            </div>
+
+            <dl class="evidence-list">
+              <div>
+                <dt>privacy.mask</dt>
+                <dd>Persistent CSS-selector masks apply across navigations and future documents.</dd>
+              </div>
+              <div>
+                <dt>preflight</dt>
+                <dd>Authentication can finish before screencast and trace capture start.</dd>
+              </div>
+              <div>
+                <dt>verify</dt>
+                <dd>The manifest records what the bundle contains so omissions and changes are explicit.</dd>
+              </div>
+            </dl>
+          </div>
+        </section>
+
+        <section class="section container pricing" id="free-pro">
+          <h2>Free records everything. Pro changes the finish.</h2>
+          <p class="pricing__intro">
+            Both tiers produce videos you own. Free keeps a three-second PlainTake credit. Pro removes it and adds distribution controls.
+          </p>
+
+          <article class="tier">
+            <div class="tier__name">
+              <h3>Free</h3>
+              <p>No key required</p>
+            </div>
+            <ul>
+              <li>Every recording, rendering, CLI, and MCP feature</li>
+              <li>Hard captions plus SRT and VTT files</li>
+              <li>Three-second “Made with PlainTake” closing credit</li>
+            </ul>
+            <a class="button tier__action" href="https://github.com/plaintake/plaintake/releases/latest">Download free</a>
+          </article>
+
+          <article class="tier">
+            <div class="tier__name">
+              <h3>Pro</h3>
+              <p>One-time licence</p>
+            </div>
+            <ul>
+              <li>Remove the PlainTake closing credit</li>
+              <li>Set your own outro text and colours</li>
+              <li>Add MP4 chapter markers and a selectable caption track</li>
+            </ul>
+            <a class="button button--primary tier__action" href="https://plainlab.gumroad.com/l/plaintake">Buy Pro</a>
+          </article>
+        </section>
+
+        <section class="section container faq" id="questions">
+          <h2>Questions developers ask first.</h2>
+          <p class="faq__intro">The short answers, without a sales call.</p>
+
+          <details>
+            <summary>Does PlainTake record audio?</summary>
+            <p>No. Output is silent video with text subtitles. Hard captions are the default because they remain visible in browsers, social feeds, and documentation embeds.</p>
+          </details>
+          <details>
+            <summary>Does recording contact a cloud service?</summary>
+            <p>No. Recording and rendering have no runtime network dependency beyond the app you explicitly point Chromium at. Pro activation is one separate, user-initiated licence check; later runs use the cached result.</p>
+          </details>
+          <details>
+            <summary>Can it record an authenticated app?</summary>
+            <p>Yes. A scenario can declare a pre-flight handoff so you sign in through the real browser before screencast and trace capture begin.</p>
+          </details>
+          <details>
+            <summary>Can an AI coding agent run it?</summary>
+            <p>Yes. PlainTake ships a local stdio MCP server with validate, run, render, and verify tools, plus matching CLI commands.</p>
+          </details>
+          <details>
+            <summary>Can I re-render without opening Chromium?</summary>
+            <p>Yes. The frozen render plan and raw capture are part of the bundle. Re-rendering verifies the source hash before FFmpeg starts.</p>
+          </details>
+        </section>
+      </main>
+
+      <footer class="footer">
+        <div class="container">
+          <p class="footer__statement">A demo should be evidence, not a memory.</p>
+          <div class="footer__meta">
+            <span>PlainTake 0.1.0 · Proprietary licence · Your output remains yours.</span>
+            <nav class="footer__links" aria-label="Footer navigation">
+              <a href="https://github.com/plaintake/plaintake/releases/latest">Releases</a>
+              <a href="https://github.com/plaintake/plaintake#readme">Guide</a>
+              <a href="https://plainlab.gumroad.com/l/plaintake">Pro</a>
+            </nav>
+          </div>
+        </div>
+      </footer>
+    </div>
+
+    <dialog class="command-dialog" id="command-dialog" aria-labelledby="command-title">
+      <h2 class="sr-only" id="command-title">Find on this page</h2>
+      <div class="command-field" id="command-field">
+        <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+          <circle cx="11" cy="11" r="7" stroke="currentColor" stroke-width="2" />
+          <path d="m20 20-4-4" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+        </svg>
+        <input
+          id="command-input"
+          type="search"
+          placeholder="Find workflow, privacy, pricing…"
+          autocomplete="off"
+          role="combobox"
+          aria-controls="command-results"
+          aria-expanded="true"
+          aria-autocomplete="list"
+        />
+        <button class="command-close" id="command-close" type="button" aria-label="Close search">Esc</button>
+      </div>
+      <div class="command-results" id="command-results" role="listbox">
+        <a class="command-item" href="#top" role="option" data-label="Demo video overview home">
+          <span>Watch the demo</span><small>Home</small>
+        </a>
+        <a class="command-item" href="#workflow" role="option" data-label="Workflow TypeScript scenario evidence bundle">
+          <span>See the workflow</span><small>Workflow</small>
+        </a>
+        <a class="command-item" href="#specification" role="option" data-label="Technical specification Chromium FFmpeg captions">
+          <span>Read the specification</span><small>Technical</small>
+        </a>
+        <a class="command-item" href="#privacy" role="option" data-label="Privacy masks authenticated apps handoff">
+          <span>Review privacy</span><small>Safety</small>
+        </a>
+        <a class="command-item" href="#free-pro" role="option" data-label="Free Pro licence pricing Gumroad">
+          <span>Compare Free and Pro</span><small>Licence</small>
+        </a>
+        <a class="command-item" href="#questions" role="option" data-label="Questions FAQ audio cloud agent rerender">
+          <span>Open common questions</span><small>FAQ</small>
+        </a>
+        <p class="command-empty" id="command-empty" hidden>No matching section. Try “privacy” or “captions”.</p>
+      </div>
+      <div class="command-help">
+        <span><kbd>↑</kbd> <kbd>↓</kbd> navigate</span>
+        <span id="command-status" aria-live="polite">6 destinations</span>
+      </div>
+    </dialog>
+  </body>
+</html>

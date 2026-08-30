@@ -150,7 +150,8 @@ exit — so an agent running `plaintake` never sits waiting on a prompt.
 ```
 plaintake validate <scenario.ts>
 plaintake run      <scenario.ts> --output <dir> (--base-url <url> | --fixture)
-                                  [--subtitles hard|soft]
+                                  [--subtitles hard|soft] [--cursor on|off]
+                                  [--camera off|zoom]
 plaintake render   <bundleDir> [--subtitles hard|soft]
 plaintake verify   <bundleDir>
 plaintake inspect  <bundleDir>
@@ -170,6 +171,17 @@ plaintake --version
 
 `run` needs exactly one target: `--base-url http://localhost:3000` for your own app, or
 `--fixture` for the bundled demo app the shipped examples record against.
+
+`--cursor on` draws a pointer that glides between the scenario's targets and ripples on
+clicks; `off`, the default, records none. It is drawn when the video is rendered, from the
+recording's frozen plan, so two renders of the same recording stay byte-identical.
+
+`--camera zoom` (Pro) eases the frame in on whatever each step already targets, so the button
+being clicked fills the screen instead of sitting in a corner of a full-page shot. The path is
+computed from the recorded steps — the same ones the captions and chapters come from — and
+frozen into the plan alongside them, so it is as repeatable as everything else here and no
+model chose it. `off`, the default, films the raw viewport. Captions and the closing card
+never zoom either way.
 
 Add `--json` to any command for a machine-readable result on stdout. Diagnostics always go to
 stderr, and the two are never mixed.
@@ -237,6 +249,50 @@ Four rules that matter in practice:
 
 `plaintake validate` tells you about all of these before a browser opens.
 
+## Demos of an app behind a login
+
+A one-time code or a CAPTCHA cannot be scripted. So a demo can stop and hand you the real
+browser window, and carry on once you are done.
+
+```ts
+export default defineDemo({
+  // ...
+  handoff: 'preflight',        // 'session' if the challenge is part of the demo itself
+  handoffTimeoutMs: 120_000,   // the default; 300s is the maximum
+
+  async preflight({ page, demo, baseURL }) {
+    await page.goto(`${baseURL}/login`);
+    await demo.handoff({
+      id: 'sign-in',
+      title: 'Sign in, including any 2FA',
+      detail: 'The browser window is yours. Come back here when the dashboard is up.',
+      until: () => page.waitForURL('**/dashboard', { timeout: 0 }),
+    });
+  },
+
+  async run({ page, demo, baseURL }) { /* the demo, already signed in */ },
+});
+```
+
+**Put the sign-in in `preflight`.** It runs before the recording starts, so it is in neither
+the video nor the trace. `handoff: 'session'` waits with the camera running, which is right for
+a step-up challenge that is genuinely part of the demo and wrong for everything else — the wait
+is filmed exactly as it happened, and nothing is cut out afterwards.
+
+**You act in the browser, not in PlainTake.** It never asks for a password, a code, or anything
+else secret. There is nowhere for one to go if you tried to give it one: the only thing the
+prompt sends back is *done*, *gave up*, or *never mind*. A recording that hands the browser over
+also stores **no Playwright trace at all**, because a trace captures every field value —
+password fields included — along with request bodies and cookies.
+
+It needs a visible browser window and a terminal, so run it with `plaintake run` or from the
+menu. With `--fixture` or in a pipe it is refused straight away, before anything opens — over
+MCP it depends on the client, and the next section says which kind works.
+
+There is also `demo.waitFor({ id, title, until })`, which waits for something to happen and
+prompts nobody — a push notification you approve on your phone, a link in an email, a background
+job finishing. That needs no window and no terminal, so it works anywhere, including CI.
+
 ## Use it from an AI agent
 
 PlainTake includes a local MCP server over stdio — four tools, no network, no credentials,
@@ -266,10 +322,26 @@ args = ["mcp", "--workspace", "/abs/path/to/your/project"]
 `--workspace` is a sandbox root: every path a tool accepts must resolve beneath it, and
 traversal, absolute paths outside it and symlink escapes are all refused.
 
+It is optional: omitted, the root is the server's cwd — the directory the client launched
+from, which in Claude Code is your project — so a config shared across projects can omit it
+and follow the client. Pass it when the client may spawn the server from somewhere
+unrelated, or to pin the root explicitly. It constrains file paths only; the recorded app
+is chosen per call by `demo_run`'s `baseURL` or `fixture`.
+
 ⚠️ **Scenario files are executed as code** by `validate` and `run`. The sandbox constrains
 which paths the tools accept, not what a loaded scenario may do. Treat a scenario file exactly
 as you would treat a test file in the same repository, and do not point the tools at a
 directory whose contents you would not run.
+
+A demo that declares `handoff` **needs a visible browser window and a terminal** — and whether
+an agent can run one depends on its client. The server is local, so the window opens on your
+screen either way. A client that supports elicitation relays the question into the chat: it
+tells you the window is open, you do the sign-in or the CAPTCHA in the browser, and you answer
+*done* in the chat when you are. The question carries a single checkbox and nothing else, so
+there is still nowhere to type a secret — the agent can validate, run, render and verify the
+whole recording. A client without elicitation is refused immediately, with nothing launched,
+and starting the recording is yours: run `plaintake run` in a terminal. The tool description
+says which case you are in.
 
 ## What a recording contains
 
@@ -305,6 +377,7 @@ Recordings panel in the menu is how you do that.
 | Your own outro text and colours | ❌ | ✅ |
 | MP4 chapter markers from `demo.chapter()` | ❌ | ✅ |
 | Selectable caption track instead of burned-in | ❌ | ✅ |
+| Camera that zooms toward each step's target | ❌ | ✅ |
 | Price | free | one-time, perpetual |
 
 **Buy a licence: [plainlab.gumroad.com/l/plaintake](https://plainlab.gumroad.com/l/plaintake)** —
@@ -316,6 +389,11 @@ install it on as many of your own machines as you need.
 
 **Chapter events are recorded on every tier.** Only the markers in the MP4 are withheld, so
 nothing is lost by recording on Free and activating later — re-render and the chapters appear.
+
+**The camera is the one thing that does not work that way,** and it is better said here than
+found out later: the shot list is worked out and frozen while the recording is made, so a
+recording made on Free has none, and re-rendering it cannot add one. If you want the zoom on
+a demo you already recorded, record it again.
 
 **The caption files are written on every tier** too. `captions.srt` and `captions.vtt` sit
 beside the video whatever you paid, so a `<track>` tag or a translation source needs no
@@ -333,9 +411,24 @@ Stated up front rather than discovered later:
 - **macOS arm64 and Linux x64 only.** No Windows build. No macOS Intel build.
 - **Chromium only**, one tab, one page.
 - **Fixed 1920×1080 at 30 fps.** No other resolutions or aspect ratios.
-- **No cursor or click animation.** It would inject frames that differ between runs.
+- **The cursor is optional and synthetic.** `--cursor on` draws one pointer shape with click
+  ripples, generated from the scenario's targets — it is not your real mouse, there are no
+  styles to configure, and `off` (the default) films none.
+- **The camera zooms, and that is all it does.** `--camera zoom` crops toward the rect a step
+  already targets and eases between shots. It never decides *what* is interesting — no
+  saliency, no model, no scene detection — so a step with no target moves nothing. The zoom is
+  upscaled from the same 1920×1080 capture, so it is capped at 1.6× before the text turns to
+  mush, and it costs render time. `off` is the default and films the raw viewport.
 - **Captions are written by you**, never transcribed.
 - **Chapter markers come only from `demo.chapter()`** — never invented from step titles.
+- **A `session` handoff is filmed.** No pause, no resume, nothing cut out — so a code the page
+  shows in the clear while you work is in the finished video. `preflight` is the mode that
+  avoids that, and `demo.mask()` covers a field you name and nothing else, not a toast and not
+  the URL bar. A demo recorded this way is also not reproducible: your own timing is an input to
+  it, though re-rendering the recording afterwards is as reproducible as any other.
+- **A handoff opens a visible browser**, which draws text on slightly different pixels than the
+  headless one and asks for `/favicon.ico`. An app without a favicon logs a 404 that fails the
+  run; the recorder log explains it, and `allowedConsoleErrors` is where you silence it.
 - **Nothing prunes old recordings.** Deleting is a deliberate act.
 - The licence check runs on your own machine in a binary you hold, so it is
   tamper-*evident*, not tamper-proof. It is a receipt, not a lock, and a licensing failure

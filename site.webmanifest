@@ -1,0 +1,17 @@
+{
+  "name": "PlainTake",
+  "short_name": "PlainTake",
+  "description": "Local, replayable browser demo videos from TypeScript scenarios.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#f8f9fc",
+  "theme_color": "#202a34",
+  "icons": [
+    {
+      "src": "assets/logo.png",
+      "sizes": "600x600",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}
