@@ -62,6 +62,7 @@
           "TypeScript scenario DSL",
           "1920 by 1080 Chromium capture",
           "Burned-in and sidecar captions",
+          "Optional spoken narration from a local voice model or your own audio",
           "Synthetic cursor and target-driven camera",
           "Human-in-the-loop browser handoff",
           "Playwright trace and semantic event timeline",
@@ -252,7 +253,7 @@
             <div class="spec-row">
               <dt>Captions</dt>
               <dd>Hard-burned by default; SRT and VTT sidecars</dd>
-              <dd class="spec-note">silent video by design</dd>
+              <dd class="spec-note">silent unless narrated</dd>
             </div>
             <div class="spec-row">
               <dt>Renderer</dt>
@@ -323,6 +324,7 @@
               <li>Set your own outro text and colours</li>
               <li>Add MP4 chapter markers and a selectable caption track</li>
               <li>Zoom the camera toward each declared step target</li>
+              <li>Narrate every caption — a local voice model or your own audio</li>
             </ul>
             <a class="button button--primary tier__action" href="https://plainlab.gumroad.com/l/plaintake">Buy Pro</a>
           </article>
@@ -334,7 +336,7 @@
 
           <details>
             <summary>Does PlainTake record audio?</summary>
-            <p>No. Output is silent video with text subtitles. Hard captions are the default because they remain visible in browsers, social feeds, and documentation embeds.</p>
+            <p>Optionally. --speech on reads each caption aloud with a voice model that runs on your own machine — no network, no account, no API key — and --speech file speaks WAV recordings you supply. Hard captions remain the default either way, because they stay visible in browsers, social feeds, and documentation embeds. Narration is a Pro feature.</p>
           </details>
           <details>
             <summary>Does recording contact a cloud service?</summary>
