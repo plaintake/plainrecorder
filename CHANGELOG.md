@@ -4,6 +4,73 @@
 GitHub release notes, so this file is the source of what a customer reads — not a summary
 written afterwards.
 
+## 1.0.0
+
+This is the release where a PlainTake video talks.
+
+**Spoken narration.** Pro recordings can use `--speech on` to read every caption aloud with a
+voice model that runs on your own machine — Kokoro-82M through onnxruntime, 24 kHz mono, no
+network, no account and no API key. `plaintake install-voice` fetches the weights once and checks
+every byte against a digest committed in the build; nothing on the recording or rendering path
+opens a socket afterwards. The captions are the script, so there is no second copy of the words to
+drift out of step with the screen, and each caption stays up for as long as the audio it was given
+rather than for a reading-rate estimate. Word timestamps from the model also let long captions be
+split at real word boundaries instead of by character weight, so captions come out better synced
+with narration on than without it.
+
+**Your own voice instead.** `narration/<stepId>.wav` beside the scenario file speaks that step in
+whatever voice you recorded — a human voiceover, or a cloud voice you already pay for — without
+PlainTake ever holding a credential. `--speech on` synthesises only the lines you have not voiced;
+`--speech file` synthesises nothing at all and refuses a step with no file, rather than quietly
+reading it in the model's voice. The clips and the mixed track are frozen into the bundle and
+hashed like every other artifact, so re-rendering a narrated recording needs no voice model and
+reproduces the same MP4. `--voice` chooses among 28 English voices; `doctor` reports which are
+installed, and does not fail if none are.
+
+**The voice works from the installed build.** The speech engine — the pronunciation dictionary,
+the inference worker and the ONNX Runtime native library — now ships inside the tarball, beside
+the binary in the same way Playwright already did, because a Node single executable cannot carry
+a native library inside itself. So `plaintake install-voice` and `--speech on` work from an
+installed `plaintake` rather than only from a source checkout. The build proves it rather than
+assuming it: it loads the native binding from the staged install tree with the interpreter that
+ships beside it, and fails if more than one platform's library is present, if a licence text is
+missing, or if the tarball is about to carry a model cache.
+
+**Click ripples land before the UI change, including on clicks that navigate** — which the
+first version of this got wrong. A ripple is now timed from the step's own start rather than from
+the moment the step's `run()` returned, because a `run()` that clicks a link does not return until
+the page it opened has loaded: on scenarios of that shape the ring used to be drawn a second or
+more after the screen had already changed, over a button that was no longer on it. Measured on the
+release demo, the three ripples now lead their screen changes by 211–323 ms and fade out across
+them.
+
+**Smaller things.** `plaintake inspect` reports a bundle's narration — clip count, spoken length,
+how much of it is your own audio, and which voice read the rest — and `doctor` reports whether
+the voice model is installed and which voices you have, without failing when you have none. A run
+that asks for `--speech on` with nothing installed and no `narration/` directory now stops before
+the browser starts, instead of recording first and failing at the first line it had to speak.
+Two more fixes found while building the above: the constant-frame-rate check read the container's
+duration rather than the video stream's, so a narrated bundle could be refused for a difference
+that was only its audio track being longer; and re-rendering a frozen bundle now creates the
+output directory it writes into, which git cannot track when empty and which made the canonical
+x86-64 reproducibility check fail on a fresh clone.
+
+### Known limitations
+
+- Narration is Pro-only in both modes, including `--speech file`: what a licence unlocks is the
+  audio track in the video, not the voice model. Like the camera it is frozen while recording, so
+  a silent bundle cannot be re-rendered into a narrated one. The pronunciation dictionary is US
+  English only, so a non-English scenario gets captions and no voice. A narrated video is longer
+  than the same scenario recorded silent, because each step waits for its line to finish.
+- The bundled speech engine makes the download bigger for everyone, including people who never
+  record a narrated demo, because there is one tarball per platform: measured on macOS arm64, the
+  download goes from 81.3 MB to 93.9 MB and the installation from 247 MB to 292 MB. The voice
+  model itself is still a separate ~93 MB download that only happens if you ask for it.
+- Reproducible *rendering* of a narrated bundle is verified offline in the digest-pinned
+  container, with the audio decoded back out of the MP4 and checked. Offline *synthesis* is not
+  verified there — it would need a voice model and a licence inside the image — so that claim
+  rests on the host runs instead.
+
 ## 0.2.0
 
 This release adds a camera that follows declared step targets and makes human approval a

@@ -19,11 +19,18 @@ Each run produces:
   event timeline, the exact render plan, the toolchain versions, and a SHA-256 manifest you
   can re-verify at any time
 
-The output is **silent video with text subtitles**. There is no audio and no text-to-speech —
-which is why the captions are burned in. No browser renders an in-container caption track, and
-neither do Slack, X, LinkedIn or GitHub, so a selectable track would leave the narration
-invisible in exactly the places demo videos get shared. The `.srt` and `.vtt` files are written
-on every run, for a `<track>` tag or a translation source.
+**The output is silent by default, and the captions are burned in.** That is a choice, not a
+gap: no browser renders an in-container caption track, and neither do Slack, X, LinkedIn or
+GitHub, so a selectable track would leave the words invisible in exactly the places demo videos
+get shared — and most of them are watched muted. The `.srt` and `.vtt` files are written on every
+run, for a `<track>` tag or a translation source.
+
+**A licence can also make the video talk.** `--speech on` reads every caption aloud with a voice
+model that runs on your own machine — no network, no account, no API key — and holds each step
+open long enough to finish the line. `--speech file` speaks WAVs you supply instead, so a human
+voiceover, or a cloud voice you already pay for, gets into the video without PlainTake ever
+holding a credential. The captions stay either way: a video that talks is exactly the case where
+a muted viewer would otherwise get nothing.
 
 ## What it looks like
 
@@ -82,7 +89,7 @@ Intel build.
 
 ```bash
 # 1. Download the tarball for your platform, the checksums, and the installer
-VERSION=0.2.0
+VERSION=1.0.0
 BASE=https://github.com/plaintake/plaintake/releases/download/v$VERSION
 curl -LO $BASE/plaintake-$VERSION-darwin-arm64.tar.gz   # or -linux-x64
 curl -LO $BASE/SHA256SUMS
@@ -378,6 +385,7 @@ Recordings panel in the menu is how you do that.
 | MP4 chapter markers from `demo.chapter()` | ❌ | ✅ |
 | Selectable caption track instead of burned-in | ❌ | ✅ |
 | Camera that zooms toward each step's target | ❌ | ✅ |
+| Spoken narration — a local voice model, or your own audio | ❌ | ✅ |
 | Price | free | one-time, perpetual |
 
 **Buy a licence: [plainlab.gumroad.com/l/plaintake](https://plainlab.gumroad.com/l/plaintake)** —
@@ -390,10 +398,13 @@ install it on as many of your own machines as you need.
 **Chapter events are recorded on every tier.** Only the markers in the MP4 are withheld, so
 nothing is lost by recording on Free and activating later — re-render and the chapters appear.
 
-**The camera is the one thing that does not work that way,** and it is better said here than
-found out later: the shot list is worked out and frozen while the recording is made, so a
-recording made on Free has none, and re-rendering it cannot add one. If you want the zoom on
-a demo you already recorded, record it again.
+**The camera and the narration are the two things that do not work that way,** and it is better
+said here than found out later: the shot list and the audio are worked out and frozen while the
+recording is made, so a recording made on Free has neither, and re-rendering it cannot add
+either. If you want the zoom or the voice on a demo you already recorded, record it again.
+
+`--speech file` needs a licence too, even though the audio is your own and nothing is
+synthesised: what a licence unlocks is the narration track in the video, not the voice model.
 
 **The caption files are written on every tier** too. `captions.srt` and `captions.vtt` sit
 beside the video whatever you paid, so a `<track>` tag or a translation source needs no
@@ -407,7 +418,12 @@ restriction on selling what you make. See [`LICENSE`](LICENSE) §3.
 
 Stated up front rather than discovered later:
 
-- **No audio of any kind** — no microphone, no page audio, no text-to-speech.
+- **The only sound is the captions read aloud** — no microphone, no page audio, no system
+  audio, no music, no sound effects. `--speech` needs a licence and a one-time 93 MB voice-model
+  download. There are 28 English voices and no per-voice tuning, no speed control and no
+  per-step override; the pronunciation dictionary is US English only, so a non-English scenario
+  gets captions and no voice rather than an accent reading the wrong sounds. A video that talks
+  is longer than the same demo recorded silent, because each step waits for its line to finish.
 - **macOS arm64 and Linux x64 only.** No Windows build. No macOS Intel build.
 - **Chromium only**, one tab, one page.
 - **Fixed 1920×1080 at 30 fps.** No other resolutions or aspect ratios.
