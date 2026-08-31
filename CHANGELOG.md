@@ -4,6 +4,42 @@
 GitHub release notes, so this file is the source of what a customer reads — not a summary
 written afterwards.
 
+## 1.1.0
+
+**Videos can open on a title card, and it can talk.** A scenario may declare an `intro` — one or
+two lines, an optional spoken hook, an optional length — and the video opens on that card instead
+of on a page load still in flight. It is the counterpart to the closing credit and deliberately
+not the same kind of thing: the credit is PlainTake's branding, so the Free Tier's is fixed in
+code, while an opening card is the demo's own words and is **available on every tier**. Only its
+colours follow a Pro `branding` config, so the two cards match. The declared length is a floor
+rather than a duration — a card whose narration needs longer is lengthened rather than cutting
+its own line off — and the card's frames are prepended before any overlay is drawn, so every
+caption, cursor point, camera shot and chapter mark in the finished file lands past it
+automatically. Both cards now fade their text, which is what the flat cut into a solid colour was
+missing; the fade is on the text rather than the picture, because a video crossfade would mean
+decoding the content twice for a transition nobody is watching for.
+
+**Framing is per scenario.** `camera: { maxZoom, margin, easeMs, minDwellMs }` overrides the
+defaults for pages they do not suit. `maxZoom` is the one that matters: at the 1.6x default the
+tightest window is 1216x810 and 37% of the frame is discarded, which is enough to crop a results
+page off at its edge — one recorded demo lost the whole left third of one. Every field is
+optional and every default is the constant the camera already used, so a scenario that says
+nothing is framed exactly as it was. `minDwellMs` is the exception to that pattern in spirit
+rather than in effect: it guarantees settled screen time for a targeted step, is **off by
+default**, and lengthens the recording when it is on, because pacing is the author's call.
+
+**Two things that made videos look cut off are fixed.**
+
+- **The cursor is no longer drawn off the bottom or right edge.** Its anchor was clamped to the
+  frame, but the arrow's origin is its tip and its body extends down and right — so a click on a
+  target flush with an edge put the entire pointer outside the picture. Measured on a recorded
+  bundle whose "Merge & Download" click anchored at y=1080 and showed no pointer at all.
+- **A chapter now holds an establishing beat before the next step starts.** Without one, a
+  `demo.chapter()` landing milliseconds ahead of a targeted step left the camera less than its
+  133ms ease floor, and the move became an honest snap-cut — correct behaviour for an impossible
+  ease, and a visible one-frame jump in the video. Recorded timelines are 400ms longer per
+  chapter as a result.
+
 ## 1.0.0
 
 This is the release where a PlainTake video talks.
