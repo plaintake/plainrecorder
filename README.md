@@ -46,6 +46,9 @@ afterwards. Fourth frame: the closing card the free tier adds.
 The caption file and manifest for those frames are in
 [`docs/samples/create-api-key/`](docs/samples/create-api-key/).
 
+More videos made with PlainTake are on
+[YouTube](https://www.youtube.com/@plainlabdev).
+
 ---
 
 ## Before you install

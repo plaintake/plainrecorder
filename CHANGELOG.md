@@ -28,6 +28,19 @@ nothing is framed exactly as it was. `minDwellMs` is the exception to that patte
 rather than in effect: it guarantees settled screen time for a targeted step, is **off by
 default**, and lengthens the recording when it is on, because pacing is the author's call.
 
+**The credit card no longer disappears when a video also has an opening card.** Found by
+watching two finished videos: both opened on their title card and then simply stopped on the
+last frame of the recording, with no credit at all. Both cards were in the plan and both pads
+were in the FFmpeg arguments. Measured cause, on FFmpeg 9.0.1: a `tpad` padding the head of a
+chain leaves a later `tpad` padding the tail restarting its timestamps from the *un-shifted*
+end of the content, so the credit's frames arrive with a timestamp the encoder has already
+written past and all but one are dropped — 1562 frames where 1637 were asked for. The
+timestamps are now renumbered between the two, which costs nothing on a stream that is already
+constant-rate and is emitted only alongside the opening card, so no earlier bundle's arguments
+change. Two checks that should have caught it are fixed with it: the recording path measured
+the *container's* duration, which a narration track padded to full length reports correctly
+while the picture is 2.5s short, and no test rendered a bundle carrying both cards.
+
 **Two things that made videos look cut off are fixed.**
 
 - **The cursor is no longer drawn off the bottom or right edge.** Its anchor was clamped to the
@@ -37,8 +50,30 @@ default**, and lengthens the recording when it is on, because pacing is the auth
 - **A chapter now holds an establishing beat before the next step starts.** Without one, a
   `demo.chapter()` landing milliseconds ahead of a targeted step left the camera less than its
   133ms ease floor, and the move became an honest snap-cut — correct behaviour for an impossible
-  ease, and a visible one-frame jump in the video. Recorded timelines are 400ms longer per
-  chapter as a result.
+  ease, and a visible one-frame jump in the video. The beat is the cursor's pre-roll plus the
+  ease, 1.3s at the defaults, and recorded timelines are that much longer per chapter as a
+  result. It has to cover the pre-roll because a step's shot is settled by the moment the
+  *pointer parks* on its target, not by the moment the step starts, and for a click the pointer
+  parks 500ms early so it can rest under the ripple: a beat shorter than that does not rush the
+  move, it puts the next section's framing on screen *before* the mark that opens the section,
+  and the chapter's wide shot becomes the thing that snap-cuts. Measured on two recorded bundles
+  with four chapters between them, every one inverted.
+
+**A recording can start on a page that is already loaded.** A scenario may declare a
+`warmup` phase: it runs after pre-flight's `about:blank` hand-back and before tracing and
+capture start, so what it navigates to and waits for reaches neither the trace nor the
+video — and frame 0 of the recording is whatever it ended on. Without it there are only two
+ways to open on the app itself, and both film the load: navigate in pre-flight, which the
+hand-back then throws away by design, or make the first step's action a `page.goto`, which
+puts the whole blank first paint on camera — measured on a real recording, seconds of white
+between the opening card and the first screen. Warm-up is where that load belongs: the
+scenario declares which page the video opens on and what "ready" means on it, the recorder
+guarantees the same off-camera treatment pre-flight already gets, and a console error on the
+warming page fails nothing for the same reason it fails nothing during pre-flight — the demo
+has not begun. Measured on the trace this forced one honest distinction: the warmed page *is*
+the recorded page, so its URL legitimately echoes through the trace as snapshot frame URLs
+and as the Referer of the recorded half's own requests; what must never appear is its
+navigation as a *request*, and the regression test searches for exactly that.
 
 ## 1.0.0
 

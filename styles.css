@@ -354,6 +354,10 @@ summary {
   font-size: var(--text-sm);
 }
 
+.hero__note a {
+  text-decoration: underline;
+}
+
 .demo-frame {
   width: 100%;
   min-width: 0;
