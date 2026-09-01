@@ -4,6 +4,19 @@
 GitHub release notes, so this file is the source of what a customer reads — not a summary
 written afterwards.
 
+## Unreleased
+
+**Fixed: the closing credit card is no longer silently shortened by capture trailing.** A
+Playwright screencast keeps rolling past the last recorded event until the context tears down, so
+the raw WebM routinely carries trailing frames the plan never accounted for — measured, 6.7s of
+them on a real session-handoff recording. The render chain anchored the credit card to the end of
+the capture file instead of the end of the planned content, so everything after the content was
+shifted by the trailing: the `-t` cut filled the card's window with frozen capture frames while
+the counts and `verify` still read exactly right, the credit drew as faint text over a page, and
+a tail longer than the card erased the card entirely. The chain now bounds the content to the
+plan's own duration before the card is appended, from the plan alone — a capture that ends with
+its content renders byte-for-byte as before.
+
 ## 1.1.0
 
 **Videos can open on a title card, and it can talk.** A scenario may declare an `intro` — one or

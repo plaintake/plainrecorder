@@ -26,11 +26,11 @@ PlainTake hands the visible
 browser to a person.
 
 approve-release
-00:00:25.957 --> 00:00:30.360
+00:00:25.986 --> 00:00:30.390
 The person approves, and the
 recorded scenario can continue.
 
 show-approved-state
-00:00:30.440 --> 00:00:34.190
+00:00:30.470 --> 00:00:34.220
 The final state is visible
 and ready to verify.
