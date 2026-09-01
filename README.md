@@ -7,6 +7,7 @@ You write the demo as code. PlainTake drives a real Chromium through it, times t
 narration, renders the captions, and hands you the video plus everything needed to prove how
 it was made. Re-run it after a UI change and you get the same demo again, updated.
 
+**Website:** [plaintake.github.io](https://plaintake.github.io) ·
 **Download:** [latest release](https://github.com/plaintake/plaintake/releases/latest) ·
 **Buy a licence:** [plainlab.gumroad.com/l/plaintake](https://plainlab.gumroad.com/l/plaintake)
 
