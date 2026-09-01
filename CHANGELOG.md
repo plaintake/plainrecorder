@@ -4,6 +4,24 @@
 GitHub release notes, so this file is the source of what a customer reads — not a summary
 written afterwards.
 
+## 1.2.1
+
+**Licences can now be activated without the interactive app: `plaintake activate
+<licence-key>`.** Activation lived only in the TUI's menu, so a headless machine — or an
+agent driving the CLI, which has no way through a menu — could never enable Pro. `activate`
+and a read-only `licence` are ordinary commands riding the exact path the TUI uses: one call
+to Gumroad, then an HMAC'd local record that everything else reads offline. A rejected key
+exits 2, an unreachable or unconfigured Gumroad exits 3, and `licence` always exits 0 —
+Free is a state, not a fault. Both take `--json`, and the key itself is never echoed,
+because stdout may end up in a log.
+
+**`@plaintake/scenario` is on npm.** The docs have told you to install it for editor
+autocomplete while writing demos; the package exists now — MIT, self-contained, its only
+dependencies `zod` and `playwright-core`, and an installed copy takes precedence over the
+fallback the binary ships. 1.2.0 was briefly on npm without its built files and was
+withdrawn; the binary and the package carry the same version, which is why this release is
+1.2.1.
+
 ## 1.2.0
 
 **An agent can now write a valid scenario without ever reading this repo's source.** A
