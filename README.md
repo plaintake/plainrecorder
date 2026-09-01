@@ -34,17 +34,10 @@ a muted viewer would otherwise get nothing.
 
 ## What it looks like
 
-| | |
-|---|---|
-| ![Opening a settings page](docs/samples/create-api-key/01-settings.png) | ![Naming a key](docs/samples/create-api-key/02-name-key.png) |
-| ![A secret, masked before it was ever visible](docs/samples/create-api-key/03-secret-masked.png) | ![The free-tier closing card](docs/samples/create-api-key/04-outro-credit.png) |
+![PlainTake recording a release-approval demo: the cursor moves to each target and the camera zooms in to follow it](assets/demo-preview.gif)
 
-Third frame: the API key is masked. Masks are registered by CSS selector *before* the element
-exists, so the secret is covered in every frame it could have appeared in — not blurred
-afterwards. Fourth frame: the closing card the free tier adds.
-
-The caption file and manifest for those frames are in
-[`docs/samples/create-api-key/`](docs/samples/create-api-key/).
+The full narrated video, and the free-tier stills and manifest this preview is drawn from, are
+in [`docs/samples/`](docs/samples/).
 
 More videos made with PlainTake are on
 [YouTube](https://www.youtube.com/@plainlabdev).
@@ -92,7 +85,7 @@ Intel build.
 
 ```bash
 # 1. Download the tarball for your platform, the checksums, and the installer
-VERSION=1.1.0
+VERSION=1.2.0
 BASE=https://github.com/plaintake/plaintake/releases/download/v$VERSION
 curl -LO $BASE/plaintake-$VERSION-darwin-arm64.tar.gz   # or -linux-x64
 curl -LO $BASE/SHA256SUMS
@@ -143,7 +136,9 @@ touched.
 
 ---
 
-## The menu
+## For humans
+
+### The menu
 
 `plaintake` with no arguments opens a terminal menu: record a demo, browse recordings,
 settings, licence, toolchain check.
@@ -155,7 +150,7 @@ delete. Deleting asks first and names the size, and refuses anything that is not
 It only starts on a real terminal. Piped, or given a command, you get usage and a non-zero
 exit — so an agent running `plaintake` never sits waiting on a prompt.
 
-## Commands
+### Commands
 
 ```
 plaintake validate <scenario.ts>
@@ -206,7 +201,7 @@ stderr, and the two are never mixed.
 | 5 | Render failure |
 | 6 | Verification or hash failure |
 
-## Writing a demo
+### Writing a demo
 
 ```ts
 import { defineDemo } from '@plaintake/scenario';
@@ -222,11 +217,8 @@ export default defineDemo({
   reducedMotion: 'reduce',
 
   async run({ page, demo, baseURL }) {
-    // Registered before the secret exists, so it is covered in every frame.
     await demo.mask({ id: 'secret', selector: '[data-testid="api-key-value"]' });
-
     await demo.chapter('Organization settings');
-
     await demo.step({
       id: 'open-settings',
       title: 'Open organization settings',
@@ -234,7 +226,6 @@ export default defineDemo({
       holdMs: 1500,
       run: () => page.goto(`${baseURL}/settings`, { waitUntil: 'load' }),
     });
-
     await demo.assert({
       id: 'settings-visible',
       title: 'Settings heading is visible',
@@ -244,69 +235,139 @@ export default defineDemo({
 });
 ```
 
-Four rules that matter in practice:
+`demo` also has `waitFor`, `handoff` and `pause`, and a scenario can declare an opening title
+card (`intro`) or per-page camera framing (`camera`). `plaintake validate` checks all of it —
+metadata shape, determinism rules, stable ids — with no browser. The complete field-by-field
+reference, with every `demo` method and every rule, is
+**[`docs/scenarios.md`](docs/scenarios.md)**.
 
-- **Set `holdMs`.** Narration is timed at 20 characters per second with a 1.2-second minimum,
-  so a step that completes in 40 ms still needs its caption on screen for over a second.
-  Without holds you get a frozen frame with captions scrolling over it. The example above went
-  from 1.5 seconds of real content under 9 seconds of narration to 8.9 seconds once the holds
-  were added.
-- **`id` values are yours and stable.** Never generate them.
-- **Masks take a CSS selector, not a locator**, which is what lets them be registered before
-  the element exists.
-- **No `Date.now()`, no `Math.random()`, no external network.** A demo that is not
-  deterministic cannot be re-recorded and compared.
+### Demos of an app behind a login
 
-`plaintake validate` tells you about all of these before a browser opens.
+A one-time code or a CAPTCHA cannot be scripted. A demo can stop and hand you the real browser
+window instead, and carry on once you are done — declared with `handoff: 'preflight'` (or
+`'session'`, if the challenge is part of the demo itself) in the scenario's metadata, and
+`demo.handoff()` in the matching phase. You act in the browser, never in PlainTake: it
+never asks for a password, and a recording made this way stores no Playwright trace at all.
+Full details, including which mode to use and why: **[`docs/scenarios.md`](docs/scenarios.md)**.
 
-## Demos of an app behind a login
+### What a recording contains
 
-A one-time code or a CAPTCHA cannot be scripted. So a demo can stop and hand you the real
-browser window, and carry on once you are done.
-
-```ts
-export default defineDemo({
-  // ...
-  handoff: 'preflight',        // 'session' if the challenge is part of the demo itself
-  handoffTimeoutMs: 120_000,   // the default; 300s is the maximum
-
-  async preflight({ page, demo, baseURL }) {
-    await page.goto(`${baseURL}/login`);
-    await demo.handoff({
-      id: 'sign-in',
-      title: 'Sign in, including any 2FA',
-      detail: 'The browser window is yours. Come back here when the dashboard is up.',
-      until: () => page.waitForURL('**/dashboard', { timeout: 0 }),
-    });
-  },
-
-  async run({ page, demo, baseURL }) { /* the demo, already signed in */ },
-});
+```text
+artifacts/create-api-key/
+├── scenario/scenario.ts        the exact source that ran
+├── raw/session.webm            the raw capture
+├── trace/trace.zip             a Playwright trace you can open
+├── events/events.ndjson        what happened, and when
+├── captions/captions.{srt,vtt,ass}
+├── render/render-plan.json     the frozen plan, including the FFmpeg arguments used
+├── output/demo.mp4             the one video, in the mode you asked for
+├── logs/                       one log per FFmpeg run
+├── manifest.json               a SHA-256 of every file
+└── manifest.sha256             a hash of the manifest itself
 ```
 
-**Put the sign-in in `preflight`.** It runs before the recording starts, so it is in neither
-the video nor the trace. `handoff: 'session'` waits with the camera running, which is right for
-a step-up challenge that is genuinely part of the demo and wrong for everything else — the wait
-is filmed exactly as it happened, and nothing is cut out afterwards.
+Because the plan is frozen, `plaintake render` on an old recording needs no browser, no
+network and no clock — and produces the same bytes it did the first time, on the same machine
+and FFmpeg build. `plaintake verify` re-checks every hash, including the manifest's own.
 
-**You act in the browser, not in PlainTake.** It never asks for a password, a code, or anything
-else secret. There is nowhere for one to go if you tried to give it one: the only thing the
-prompt sends back is *done*, *gave up*, or *never mind*. A recording that hands the browser over
-also stores **no Playwright trace at all**, because a trace captures every field value —
-password fields included — along with request bodies and cookies.
+Nothing is deleted automatically. Recordings accumulate until you remove them, and the
+Recordings panel in the menu is how you do that.
 
-It needs a visible browser window and a terminal, so run it with `plaintake run` or from the
-menu. With `--fixture` or in a pipe it is refused straight away, before anything opens — over
-MCP it depends on the client, and the next section says which kind works.
+---
 
-There is also `demo.waitFor({ id, title, until })`, which waits for something to happen and
-prompts nobody — a push notification you approve on your phone, a link in an email, a background
-job finishing. That needs no window and no terminal, so it works anywhere, including CI.
+### Free and Pro
 
-## Use it from an AI agent
+| | Free | Pro |
+|---|---|---|
+| Every recording, rendering and MCP feature | ✅ | ✅ |
+| Closing credit card | 3s *Made with PlainTake* | removed |
+| Your own outro text and colours | ❌ | ✅ |
+| MP4 chapter markers from `demo.chapter()` | ❌ | ✅ |
+| Selectable caption track instead of burned-in | ❌ | ✅ |
+| Camera that zooms toward each step's target | ❌ | ✅ |
+| Spoken narration — a local voice model, or your own audio | ❌ | ✅ |
+| Price | free | one-time, perpetual |
+
+**Buy a licence: [plainlab.gumroad.com/l/plaintake](https://plainlab.gumroad.com/l/plaintake)** —
+the current price is on that page.
+
+Then `plaintake` → *Licence* → *Enter a licence key*. That makes one request to Gumroad and
+caches the answer; nothing afterwards touches the network. One payment, no subscription, and
+install it on as many of your own machines as you need.
+
+**Chapter events are recorded on every tier.** Only the markers in the MP4 are withheld, so
+nothing is lost by recording on Free and activating later — re-render and the chapters appear.
+
+**The camera and the narration are the two things that do not work that way,** and it is better
+said here than found out later: the shot list and the audio are worked out and frozen while the
+recording is made, so a recording made on Free has neither, and re-rendering it cannot add
+either. If you want the zoom or the voice on a demo you already recorded, record it again.
+
+`--speech file` needs a licence too, even though the audio is your own and nothing is
+synthesised: what a licence unlocks is the narration track in the video, not the voice model.
+
+**The caption files are written on every tier** too. `captions.srt` and `captions.vtt` sit
+beside the video whatever you paid, so a `<track>` tag or a translation source needs no
+licence. What a licence buys is the track muxed *into* the MP4, for the desktop players that
+render one.
+
+**The videos are yours on both tiers.** No ownership claim, no licence back to us, no
+restriction on selling what you make. See [`LICENSE`](LICENSE) §3.
+
+### What it does not do
+
+Stated up front rather than discovered later:
+
+- **The only sound is the captions read aloud** — no microphone, no page audio, no system
+  audio, no music, no sound effects. `--speech` needs a licence and a one-time 93 MB voice-model
+  download. There are 28 English voices and no per-voice tuning, no speed control and no
+  per-step override; the pronunciation dictionary is US English only, so a non-English scenario
+  gets captions and no voice rather than an accent reading the wrong sounds. A video that talks
+  is longer than the same demo recorded silent, because each step waits for its line to finish.
+- **macOS arm64 and Linux x64 only.** No Windows build. No macOS Intel build.
+- **Chromium only**, one tab, one page.
+- **Fixed 1920×1080 at 30 fps.** No other resolutions or aspect ratios.
+- **The cursor is optional and synthetic.** `--cursor on` draws one pointer shape with click
+  ripples, generated from the scenario's targets — it is not your real mouse, there are no
+  styles to configure, and `off` (the default) films none.
+- **The camera zooms, and that is all it does.** `--camera zoom` crops toward the rect a step
+  already targets and eases between shots. It never decides *what* is interesting — no
+  saliency, no model, no scene detection — so a step with no target moves nothing. The zoom is
+  upscaled from the same 1920×1080 capture, so it is capped at 1.6× before the text turns to
+  mush, and it costs render time. `off` is the default and films the raw viewport.
+- **Captions are written by you**, never transcribed.
+- **Chapter markers come only from `demo.chapter()`** — never invented from step titles.
+- **A `session` handoff is filmed.** No pause, no resume, nothing cut out — so a code the page
+  shows in the clear while you work is in the finished video. `preflight` is the mode that
+  avoids that, and `demo.mask()` covers a field you name and nothing else, not a toast and not
+  the URL bar. A demo recorded this way is also not reproducible: your own timing is an input to
+  it, though re-rendering the recording afterwards is as reproducible as any other.
+- **A handoff opens a visible browser**, which draws text on slightly different pixels than the
+  headless one and asks for `/favicon.ico`. An app without a favicon logs a 404 that fails the
+  run; the recorder log explains it, and `allowedConsoleErrors` is where you silence it.
+- **Nothing prunes old recordings.** Deleting is a deliberate act.
+- The licence check runs on your own machine in a binary you hold, so it is
+  tamper-*evident*, not tamper-proof. It is a receipt, not a lock, and a licensing failure
+  never blocks a recording — it falls back to the free tier and says why.
+
+### Support
+
+- **Something is broken:** [open an issue](https://github.com/plaintake/plaintake/issues/new/choose).
+  Please include the output of `plaintake doctor --json`, which names your version, FFmpeg
+  and libass.
+- **Purchases, keys and refunds:** through
+  [Gumroad](https://plainlab.gumroad.com/l/plaintake), which handles payment.
+
+This repository is the download and issue channel.
+
+---
+
+## For agents
 
 PlainTake includes a local MCP server over stdio — four tools, no network, no credentials,
-no account.
+no account. If your agent shells out to CLIs instead of speaking MCP, the same four
+operations (`validate`/`run`/`render`/`verify`) are plain commands: see [Commands](#commands)
+above and pass `--json` for a machine-readable result.
 
 **Claude Code**, in your project's `.mcp.json`:
 
@@ -353,115 +414,13 @@ whole recording. A client without elicitation is refused immediately, with nothi
 and starting the recording is yours: run `plaintake run` in a terminal. The tool description
 says which case you are in.
 
-## What a recording contains
-
-```text
-artifacts/create-api-key/
-├── scenario/scenario.ts        the exact source that ran
-├── raw/session.webm            the raw capture
-├── trace/trace.zip             a Playwright trace you can open
-├── events/events.ndjson        what happened, and when
-├── captions/captions.{srt,vtt,ass}
-├── render/render-plan.json     the frozen plan, including the FFmpeg arguments used
-├── output/demo.mp4             the one video, in the mode you asked for
-├── logs/                       one log per FFmpeg run
-├── manifest.json               a SHA-256 of every file
-└── manifest.sha256             a hash of the manifest itself
-```
-
-Because the plan is frozen, `plaintake render` on an old recording needs no browser, no
-network and no clock — and produces the same bytes it did the first time, on the same machine
-and FFmpeg build. `plaintake verify` re-checks every hash, including the manifest's own.
-
-Nothing is deleted automatically. Recordings accumulate until you remove them, and the
-Recordings panel in the menu is how you do that.
-
----
-
-## Free and Pro
-
-| | Free | Pro |
-|---|---|---|
-| Every recording, rendering and MCP feature | ✅ | ✅ |
-| Closing credit card | 3s *Made with PlainTake* | removed |
-| Your own outro text and colours | ❌ | ✅ |
-| MP4 chapter markers from `demo.chapter()` | ❌ | ✅ |
-| Selectable caption track instead of burned-in | ❌ | ✅ |
-| Camera that zooms toward each step's target | ❌ | ✅ |
-| Spoken narration — a local voice model, or your own audio | ❌ | ✅ |
-| Price | free | one-time, perpetual |
-
-**Buy a licence: [plainlab.gumroad.com/l/plaintake](https://plainlab.gumroad.com/l/plaintake)** —
-the current price is on that page.
-
-Then `plaintake` → *Licence* → *Enter a licence key*. That makes one request to Gumroad and
-caches the answer; nothing afterwards touches the network. One payment, no subscription, and
-install it on as many of your own machines as you need.
-
-**Chapter events are recorded on every tier.** Only the markers in the MP4 are withheld, so
-nothing is lost by recording on Free and activating later — re-render and the chapters appear.
-
-**The camera and the narration are the two things that do not work that way,** and it is better
-said here than found out later: the shot list and the audio are worked out and frozen while the
-recording is made, so a recording made on Free has neither, and re-rendering it cannot add
-either. If you want the zoom or the voice on a demo you already recorded, record it again.
-
-`--speech file` needs a licence too, even though the audio is your own and nothing is
-synthesised: what a licence unlocks is the narration track in the video, not the voice model.
-
-**The caption files are written on every tier** too. `captions.srt` and `captions.vtt` sit
-beside the video whatever you paid, so a `<track>` tag or a translation source needs no
-licence. What a licence buys is the track muxed *into* the MP4, for the desktop players that
-render one.
-
-**The videos are yours on both tiers.** No ownership claim, no licence back to us, no
-restriction on selling what you make. See [`LICENSE`](LICENSE) §3.
-
-## What it does not do
-
-Stated up front rather than discovered later:
-
-- **The only sound is the captions read aloud** — no microphone, no page audio, no system
-  audio, no music, no sound effects. `--speech` needs a licence and a one-time 93 MB voice-model
-  download. There are 28 English voices and no per-voice tuning, no speed control and no
-  per-step override; the pronunciation dictionary is US English only, so a non-English scenario
-  gets captions and no voice rather than an accent reading the wrong sounds. A video that talks
-  is longer than the same demo recorded silent, because each step waits for its line to finish.
-- **macOS arm64 and Linux x64 only.** No Windows build. No macOS Intel build.
-- **Chromium only**, one tab, one page.
-- **Fixed 1920×1080 at 30 fps.** No other resolutions or aspect ratios.
-- **The cursor is optional and synthetic.** `--cursor on` draws one pointer shape with click
-  ripples, generated from the scenario's targets — it is not your real mouse, there are no
-  styles to configure, and `off` (the default) films none.
-- **The camera zooms, and that is all it does.** `--camera zoom` crops toward the rect a step
-  already targets and eases between shots. It never decides *what* is interesting — no
-  saliency, no model, no scene detection — so a step with no target moves nothing. The zoom is
-  upscaled from the same 1920×1080 capture, so it is capped at 1.6× before the text turns to
-  mush, and it costs render time. `off` is the default and films the raw viewport.
-- **Captions are written by you**, never transcribed.
-- **Chapter markers come only from `demo.chapter()`** — never invented from step titles.
-- **A `session` handoff is filmed.** No pause, no resume, nothing cut out — so a code the page
-  shows in the clear while you work is in the finished video. `preflight` is the mode that
-  avoids that, and `demo.mask()` covers a field you name and nothing else, not a toast and not
-  the URL bar. A demo recorded this way is also not reproducible: your own timing is an input to
-  it, though re-rendering the recording afterwards is as reproducible as any other.
-- **A handoff opens a visible browser**, which draws text on slightly different pixels than the
-  headless one and asks for `/favicon.ico`. An app without a favicon logs a 404 that fails the
-  run; the recorder log explains it, and `allowedConsoleErrors` is where you silence it.
-- **Nothing prunes old recordings.** Deleting is a deliberate act.
-- The licence check runs on your own machine in a binary you hold, so it is
-  tamper-*evident*, not tamper-proof. It is a receipt, not a lock, and a licensing failure
-  never blocks a recording — it falls back to the free tier and says why.
-
-## Support
-
-- **Something is broken:** [open an issue](https://github.com/plaintake/plaintake/issues/new/choose).
-  Please include the output of `plaintake doctor --json`, which names your version, FFmpeg
-  and libass.
-- **Purchases, keys and refunds:** through
-  [Gumroad](https://plainlab.gumroad.com/l/plaintake), which handles payment.
-
-This repository is the download and issue channel.
+**Writing a scenario without reading this project's source:** the four MCP tool descriptions
+are self-contained — `demo_validate`'s description spells out the full `defineDemo()` shape, every `demo`
+method, and the determinism rules, so an agent that only ever sees the tool list can still
+write a valid one. For more depth than a tool description carries, or for validating outside
+an MCP session entirely, use **[`docs/scenarios.md`](docs/scenarios.md)** (the full DSL
+reference) and **[`schema/scenario.schema.json`](schema/scenario.schema.json)** (the metadata
+schema as JSON Schema).
 
 ---
 

@@ -4,7 +4,22 @@
 GitHub release notes, so this file is the source of what a customer reads — not a summary
 written afterwards.
 
-## Unreleased
+## 1.2.0
+
+**An agent can now write a valid scenario without ever reading this repo's source.** A
+malformed scenario used to fail with a raw `ZodError` issue array — the same JSON blob in
+both `validate`'s output and `demo_validate`'s `problems` field — so `defineDemo` now
+rewraps it as prescriptive `field: message` text, and constraints that previously lived only
+in doc comments (`handoffTimeoutMs`, `intro.durationMs`, every `camera` field) now say why in
+the message itself. The scenario metadata schema is exported as
+`public/schema/scenario.schema.json` via `pnpm schema:export`, checked in tests so it cannot
+drift from the Zod schema it is generated from. `demo_validate`'s MCP description grew a
+self-contained DSL cheat-sheet — metadata shape, every `demo` method, the determinism and
+`holdMs` rules — since the server runs against a customer's workspace and cannot point at
+this repo's docs. `public/docs/scenarios.md` is the same reference at full depth for a human
+or an agent working from the public release channel, and `public/README.md` is split into
+`## For humans` and `## For agents` sections, with the four-screenshot grid replaced by one
+generated GIF.
 
 **Fixed: the closing credit card is no longer silently shortened by capture trailing.** A
 Playwright screencast keeps rolling past the last recorded event until the context tears down, so
