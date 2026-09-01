@@ -165,6 +165,8 @@ plaintake verify   <bundleDir>
 plaintake inspect  <bundleDir>
 plaintake doctor
 plaintake install-browser
+plaintake activate <licence-key>
+plaintake licence
 plaintake --version
 ```
 
@@ -176,6 +178,8 @@ plaintake --version
 | `verify` | Re-hashes every file against the manifest |
 | `inspect` | Reports the video, captions, chapters, output sizes and toolchain. Read-only |
 | `doctor` | Checks FFmpeg, libass, x264 and the filters that are needed |
+| `activate` | Verifies a licence key with Gumroad once and saves it locally. Headless alternative to the TUI's *Enter a licence key* |
+| `licence` | Prints the current licence state — Free or Pro. Read-only |
 
 `run` needs exactly one target: `--base-url http://localhost:3000` for your own app, or
 `--fixture` for the bundled demo app the shipped examples record against.
@@ -205,6 +209,11 @@ stderr, and the two are never mixed.
 | 6 | Verification or hash failure |
 
 ### Writing a demo
+
+Scenario files import `@plaintake/scenario`. The installed binary ships a fallback copy, so
+this runs with nothing else installed — `npm install --save-dev @plaintake/scenario` in your own project
+only if you want editor autocomplete while writing one; your copy then takes precedence over
+the built-in fallback.
 
 ```ts
 import { defineDemo } from '@plaintake/scenario';
@@ -294,9 +303,10 @@ Recordings panel in the menu is how you do that.
 **Buy a licence: [plainlab.gumroad.com/l/plaintake](https://plainlab.gumroad.com/l/plaintake)** —
 the current price is on that page.
 
-Then `plaintake` → *Licence* → *Enter a licence key*. That makes one request to Gumroad and
-caches the answer; nothing afterwards touches the network. One payment, no subscription, and
-install it on as many of your own machines as you need.
+Then `plaintake` → *Licence* → *Enter a licence key*, or headlessly with
+`plaintake activate <licence-key>`. Either way it makes one request to Gumroad and caches the
+answer; nothing afterwards touches the network. `plaintake licence` prints the current state.
+One payment, no subscription, and install it on as many of your own machines as you need.
 
 **Chapter events are recorded on every tier.** Only the markers in the MP4 are withheld, so
 nothing is lost by recording on Free and activating later — re-render and the chapters appear.

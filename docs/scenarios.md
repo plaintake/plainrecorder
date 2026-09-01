@@ -5,7 +5,9 @@ metadata field, every `demo` method, and the rules a scenario has to follow — 
 wants the depth: a human writing one by hand, or an agent with no other context than this file
 and [`schema/scenario.schema.json`](../schema/scenario.schema.json).
 
-A scenario is one file, one default export:
+A scenario is one file, one default export. `@plaintake/scenario` is only needed for editor
+autocomplete while writing one — `npm install --save-dev @plaintake/scenario` in your project and your
+copy takes precedence; without it, the installed binary's own fallback copy is what runs:
 
 ```ts
 import { defineDemo } from '@plaintake/scenario';

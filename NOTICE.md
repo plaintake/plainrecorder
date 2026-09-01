@@ -83,7 +83,7 @@ request to Gumroad's public licence-verify endpoint; no API key or access token 
 and no credential is stored. Recording and rendering never contact Gumroad or anything
 else — see [`docs/licensing.md`](docs/licensing.md).
 
-## Spoken narration: Kokoro, HeadTTS, CMU dictionary, ONNX Runtime (A60)
+## Spoken narration: Kokoro, HeadTTS, CMU dictionary, ONNX Runtime
 
 Narrated audio is synthesised locally. The component chain was chosen for its licences as
 much as its quality, because the obvious alternatives are copyleft and this product is
