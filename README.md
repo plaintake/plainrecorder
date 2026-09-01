@@ -38,7 +38,9 @@ a muted viewer would otherwise get nothing.
 ![PlainTake recording a release-approval demo: the cursor moves to each target and the camera zooms in to follow it](assets/demo-preview.gif)
 
 The full narrated video, and the free-tier stills and manifest this preview is drawn from, are
-in [`docs/samples/`](docs/samples/).
+in [`docs/samples/`](docs/samples/). The landing-page video was recorded by PlainTake from a
+scenario — the exact source, the command, and every flag it used are published in
+[`docs/site-demo/`](docs/site-demo/).
 
 More videos made with PlainTake are on
 [YouTube](https://www.youtube.com/@plainlabdev).
