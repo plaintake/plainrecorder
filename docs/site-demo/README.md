@@ -40,12 +40,14 @@ What each flag contributed:
   click. Drawn in post from the declared targets; the recording never moves a real mouse
   except during the handoff.
 - `--camera zoom` (Pro) — the frame easing in on whatever each step already targets.
-- `--subtitles soft` (Pro) — a selectable caption track rather than burned-in text.
-- `--speech on` (Pro) — the narration, synthesised locally; no API key, nothing leaves the
-  machine.
+- `--subtitles soft` — a selectable caption track rather than burned-in text. Free on
+  every tier, and the default since 1.3.0, so it is written out here only to record what
+  this run actually used.
+- `--speech on` — the narration, synthesised locally; no API key, nothing leaves the
+  machine. Free on every tier.
 
-Drop the three Pro flags and the same scenario records on the Free tier — burned-in
-captions, pointer, and the closing `Made with PlainTake` card, no narration and no zoom.
+Drop `--camera zoom`, the one Pro flag, and the same scenario records on the Free tier —
+captions, pointer, narration, and the closing `Made with PlainTake` card, no zoom.
 
 ## Why not `--fixture`
 

@@ -4,6 +4,51 @@
 GitHub release notes, so this file is the source of what a customer reads — not a summary
 written afterwards.
 
+## 1.3.0
+
+**Spoken narration is free on every tier.** `--speech on` reads every caption aloud with a
+voice model that runs on your own machine, and `--speech file` speaks WAVs you supply — both
+of them used to need a licence, and neither does now. Nothing about how narration works has
+changed: the same local Kokoro model, the same 28 English voices, the same frozen WAV muxed
+into the MP4 and hashed into the manifest. What changed is who gets it. A demo that reads its
+own captions aloud is an accessibility default rather than a finish, and the captions are
+already the script whatever you paid.
+
+Practically: `plaintake install-voice` is the only thing standing between a fresh install and a
+talking demo, and it always was free. `doctor` reports whether the model is there. Existing
+recordings are unaffected — narration was already frozen into the render plan rather than
+checked at render time, so re-rendering any bundle produces exactly the same MP4 it did before.
+
+**The selectable caption track is free too, and is now the default.** `--subtitles soft` muxes
+a real `mov_text` track into the MP4 instead of burning the words into the pixels, and it also
+needed a licence until now. **Every recording you have already made can become a soft one
+without recording it again** — the render plan has always frozen the FFmpeg arguments for both
+caption modes, precisely so that changing your mind is a re-render. `plaintake render <bundle>
+--subtitles soft` on a demo you captured last year does it, and it no longer asks about a
+licence, because `render` now reads nothing but the frozen plan.
+
+**One thing to know about the new default.** An in-container caption track is rendered by
+desktop players and by essentially nothing else: not a browser, not Slack, not X, not LinkedIn,
+not a GitHub embed. PlainTake records silent video, so the captions are the whole script — which
+means **if you are posting or embedding the video, pass `--subtitles hard`** and get the words
+burned into the pixels as before. The CLI help, the MCP tool description and the README all say
+so at the point you choose. `captions.srt` and `captions.vtt` are still written on every run
+either way. Soft also needs no libass of its own, so the default render now succeeds on FFmpeg
+builds where burn-in fails.
+
+If you bought a licence for the narration or the caption track, it still buys the three things
+it always did — MP4 chapter markers, the camera that zooms toward each step's target, and
+removing the *Made with PlainTake* credit (or replacing it with your own text and colours) —
+and this release does not touch any of them. A free recording still ends with the credit card,
+narrated or not, whichever caption mode it used.
+
+**Agents get a skill they can carry.** This repository now ships
+[`skills/plaintake/SKILL.md`](skills/plaintake/SKILL.md) — a self-contained agent skill in the
+`SKILL.md` format Claude Code, Codex and their kin read. Copy the folder into `.claude/skills/`
+(Claude Code) or `~/.agents/skills/` (Codex) and the agent knows the whole workflow: writing a
+scenario, `validate` → `run` → `verify`, and the mistakes that cost a re-record. It defers to
+the MCP tool descriptions and `docs/scenarios.md` for depth rather than duplicating them.
+
 ## 1.2.1
 
 **Licences can now be activated without the interactive app: `plaintake activate

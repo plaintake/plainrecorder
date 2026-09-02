@@ -13,20 +13,23 @@ it was made. Re-run it after a UI change and you get the same demo again, update
 
 Each run produces:
 
-- `demo.mp4` — one H.264 video, captions burned into the pixels. A licence can swap the
-  burn-in for a selectable caption track instead
+- `demo.mp4` — one H.264 video, captions as a selectable track by default, or `--subtitles
+  hard` to burn them into the pixels instead
 - `captions.srt`, `captions.vtt`, `captions.ass` — standalone caption files
 - an evidence bundle: the scenario source, the raw capture, a Playwright trace, the semantic
   event timeline, the exact render plan, the toolchain versions, and a SHA-256 manifest you
   can re-verify at any time
 
-**The output is silent by default, and the captions are burned in.** That is a choice, not a
-gap: no browser renders an in-container caption track, and neither do Slack, X, LinkedIn or
-GitHub, so a selectable track would leave the words invisible in exactly the places demo videos
-get shared — and most of them are watched muted. The `.srt` and `.vtt` files are written on every
-run, for a `<track>` tag or a translation source.
+**The output is silent by default, so the captions carry the whole demo — and where the video is
+going decides which kind you want.** `--subtitles soft`, the default, muxes a selectable track
+that desktop players render. **`--subtitles hard` burns the words into the pixels, and that is
+the one to pass for anything you are going to post or embed**: no browser renders an
+in-container caption track, and neither do Slack, X, LinkedIn or GitHub, so a soft track leaves
+a silent video with no visible words in exactly the places demo videos get shared — and most of
+them are watched muted. The `.srt` and `.vtt` files are written on every run either way, for a
+`<track>` tag or a translation source.
 
-**A licence can also make the video talk.** `--speech on` reads every caption aloud with a voice
+**It can also make the video talk, free on every tier.** `--speech on` reads every caption aloud with a voice
 model that runs on your own machine — no network, no account, no API key — and holds each step
 open long enough to finish the line. `--speech file` speaks WAVs you supply instead, so a human
 voiceover, or a cloud voice you already pay for, gets into the video without PlainTake ever
@@ -88,7 +91,7 @@ Intel build.
 
 ```bash
 # 1. Download the tarball for your platform, the checksums, and the installer
-VERSION=1.2.1
+VERSION=1.3.0
 BASE=https://github.com/plaintake/plaintake/releases/download/v$VERSION
 curl -LO $BASE/plaintake-$VERSION-darwin-arm64.tar.gz   # or -linux-x64
 curl -LO $BASE/SHA256SUMS
@@ -158,13 +161,15 @@ exit — so an agent running `plaintake` never sits waiting on a prompt.
 ```
 plaintake validate <scenario.ts>
 plaintake run      <scenario.ts> --output <dir> (--base-url <url> | --fixture)
-                                  [--subtitles hard|soft] [--cursor on|off]
-                                  [--camera off|zoom]
-plaintake render   <bundleDir> [--subtitles hard|soft]
+                                  [--subtitles soft|hard] [--cursor on|off]
+                                  [--camera off|zoom] [--speech off|on|file]
+                                  [--voice <id>]
+plaintake render   <bundleDir> [--subtitles soft|hard]
 plaintake verify   <bundleDir>
 plaintake inspect  <bundleDir>
 plaintake doctor
 plaintake install-browser
+plaintake install-voice [--voice <id>]... [--all-voices]
 plaintake activate <licence-key>
 plaintake licence
 plaintake --version
@@ -177,7 +182,8 @@ plaintake --version
 | `render` | Re-renders from a recording's frozen plan. No browser, no network, no clock |
 | `verify` | Re-hashes every file against the manifest |
 | `inspect` | Reports the video, captions, chapters, output sizes and toolchain. Read-only |
-| `doctor` | Checks FFmpeg, libass, x264 and the filters that are needed |
+| `doctor` | Checks FFmpeg, libass, x264 and the filters that are needed, and reports whether the voice model is installed |
+| `install-voice` | Downloads the voice model `--speech on` needs. Once, and only if you want narration |
 | `activate` | Verifies a licence key with Gumroad once and saves it locally. Headless alternative to the TUI's *Enter a licence key* |
 | `licence` | Prints the current licence state — Free or Pro. Read-only |
 
@@ -292,12 +298,12 @@ Recordings panel in the menu is how you do that.
 | | Free | Pro |
 |---|---|---|
 | Every recording, rendering and MCP feature | ✅ | ✅ |
+| Spoken narration — a local voice model, or your own audio | ✅ | ✅ |
+| Selectable caption track as well as burned-in | ✅ | ✅ |
 | Closing credit card | 3s *Made with PlainTake* | removed |
 | Your own outro text and colours | ❌ | ✅ |
 | MP4 chapter markers from `demo.chapter()` | ❌ | ✅ |
-| Selectable caption track instead of burned-in | ❌ | ✅ |
 | Camera that zooms toward each step's target | ❌ | ✅ |
-| Spoken narration — a local voice model, or your own audio | ❌ | ✅ |
 | Price | free | one-time, perpetual |
 
 **Buy a licence: [plainlab.gumroad.com/l/plaintake](https://plainlab.gumroad.com/l/plaintake)** —
@@ -311,18 +317,22 @@ One payment, no subscription, and install it on as many of your own machines as 
 **Chapter events are recorded on every tier.** Only the markers in the MP4 are withheld, so
 nothing is lost by recording on Free and activating later — re-render and the chapters appear.
 
-**The camera and the narration are the two things that do not work that way,** and it is better
-said here than found out later: the shot list and the audio are worked out and frozen while the
-recording is made, so a recording made on Free has neither, and re-rendering it cannot add
-either. If you want the zoom or the voice on a demo you already recorded, record it again.
+**The camera is the one thing that does not work that way,** and it is better said here than
+found out later: the shot list is worked out and frozen while the recording is made, so a
+recording made on Free has none, and re-rendering it cannot add one. If you want the zoom on a
+demo you already recorded, record it again.
 
-`--speech file` needs a licence too, even though the audio is your own and nothing is
-synthesised: what a licence unlocks is the narration track in the video, not the voice model.
+**Narration is free on every tier,** in both modes. `--speech on` reads your captions aloud with
+a local voice model, `--speech file` speaks WAVs you supply, and neither needs a licence — a
+demo that reads itself aloud is an accessibility default, not a finish.
 
-**The caption files are written on every tier** too. `captions.srt` and `captions.vtt` sit
-beside the video whatever you paid, so a `<track>` tag or a translation source needs no
-licence. What a licence buys is the track muxed *into* the MP4, for the desktop players that
-render one.
+**Captions are free in every form,** and always were in most of them. `captions.srt` and
+`captions.vtt` sit beside the video whatever you paid, and as of 1.3.0 so does `--subtitles
+soft`, which muxes the track *into* the MP4 for the desktop players that render one — now the
+default. Pass `--subtitles hard` for anything headed to a browser, a chat thread or a muted
+autoplay embed, none of which show an in-container track. The caption arguments for both modes
+are frozen into every bundle, so any recording you already have can be re-rendered either way
+without recording it again.
 
 **The videos are yours on both tiers.** No ownership claim, no licence back to us, no
 restriction on selling what you make. See [`LICENSE`](LICENSE) §3.
@@ -332,7 +342,7 @@ restriction on selling what you make. See [`LICENSE`](LICENSE) §3.
 Stated up front rather than discovered later:
 
 - **The only sound is the captions read aloud** — no microphone, no page audio, no system
-  audio, no music, no sound effects. `--speech` needs a licence and a one-time 93 MB voice-model
+  audio, no music, no sound effects. `--speech on` needs a one-time 93 MB voice-model
   download. There are 28 English voices and no per-voice tuning, no speed control and no
   per-step override; the pronunciation dictionary is US English only, so a non-English scenario
   gets captions and no voice rather than an accent reading the wrong sounds. A video that talks
@@ -434,6 +444,13 @@ write a valid one. For more depth than a tool description carries, or for valida
 an MCP session entirely, use **[`docs/scenarios.md`](docs/scenarios.md)** (the full DSL
 reference) and **[`schema/scenario.schema.json`](schema/scenario.schema.json)** (the metadata
 schema as JSON Schema).
+
+**A skill your agent can carry:** [`skills/plaintake/`](skills/plaintake/) is a self-contained
+agent skill — the `SKILL.md` format Claude Code, Codex and their kin read — covering the whole
+workflow: writing a scenario, `validate` → `run` → `verify`, and the mistakes that cost a
+re-record. Copy the folder into `.claude/skills/` (Claude Code) or `~/.agents/skills/` (Codex).
+It defers to the MCP tool descriptions and `docs/scenarios.md` for depth rather than
+duplicating them.
 
 ---
 
