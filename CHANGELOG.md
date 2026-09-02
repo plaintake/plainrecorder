@@ -4,6 +4,28 @@
 GitHub release notes, so this file is the source of what a customer reads — not a summary
 written afterwards.
 
+## 1.4.0
+
+**A product's branding now travels with its repository.** The outro branding (Pro) comes from a
+`config.json`, and until now that meant this machine's global one at
+`~/.config/plaintake/config.json` — fine while you record demos for one product, wrong the moment
+there are two. `plaintake run` now looks for a `plaintake.config.json` walking up from the
+working directory first: commit one at each product's repo root and every scenario recorded from
+inside that repository picks up that product's branding automatically, with nothing to remember
+to switch and no way for last session's branding to bleed into this one. A discovered project
+config replaces the global one outright — deliberately not a merge, so a repo's committed
+branding is never quietly blended with whatever happens to be on the machine that ran it.
+
+**`--config <path>` names a file outright,** ahead of both lookups. A path that is missing or
+invalid is a usage error (exit 2), not a silent fallback: naming a file and having it quietly
+ignored would defeat the point. Your licence stays tied to your machine either way — a project
+config picks *what* branding a run uses, never *whether* it's honoured, and the TUI's settings
+screen is untouched, reading this machine's global config as it always did.
+
+That is the whole release. Branding is decided once at record time and frozen into the plan, so
+every bundle you already have re-renders to exactly the video it did before, and `render`
+still reads nothing but the frozen plan.
+
 ## 1.3.0
 
 **Spoken narration is free on every tier.** `--speech on` reads every caption aloud with a

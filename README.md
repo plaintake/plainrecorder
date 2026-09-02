@@ -91,7 +91,7 @@ Intel build.
 
 ```bash
 # 1. Download the tarball for your platform, the checksums, and the installer
-VERSION=1.3.0
+VERSION=1.4.0
 BASE=https://github.com/plaintake/plaintake/releases/download/v$VERSION
 curl -LO $BASE/plaintake-$VERSION-darwin-arm64.tar.gz   # or -linux-x64
 curl -LO $BASE/SHA256SUMS
@@ -163,7 +163,7 @@ plaintake validate <scenario.ts>
 plaintake run      <scenario.ts> --output <dir> (--base-url <url> | --fixture)
                                   [--subtitles soft|hard] [--cursor on|off]
                                   [--camera off|zoom] [--speech off|on|file]
-                                  [--voice <id>]
+                                  [--voice <id>] [--config <path>]
 plaintake render   <bundleDir> [--subtitles soft|hard]
 plaintake verify   <bundleDir>
 plaintake inspect  <bundleDir>
@@ -200,6 +200,12 @@ computed from the recorded steps — the same ones the captions and chapters com
 frozen into the plan alongside them, so it is as repeatable as everything else here and no
 model chose it. `off`, the default, films the raw viewport. Captions and the closing card
 never zoom either way.
+
+Recording for more than one product? Commit a `plaintake.config.json` at each product's repo
+root with its own outro branding (Pro) — `run` finds the nearest one walking up from the
+working directory, otherwise falls back to this machine's global config. `--config <path>`
+picks a file outright; a missing or invalid one is a usage error rather than a silent
+fallback.
 
 Add `--json` to any command for a machine-readable result on stdout. Diagnostics always go to
 stderr, and the two are never mixed.
@@ -327,7 +333,7 @@ a local voice model, `--speech file` speaks WAVs you supply, and neither needs a
 demo that reads itself aloud is an accessibility default, not a finish.
 
 **Captions are free in every form,** and always were in most of them. `captions.srt` and
-`captions.vtt` sit beside the video whatever you paid, and as of 1.3.0 so does `--subtitles
+`captions.vtt` sit beside the video whatever you paid, and so does `--subtitles
 soft`, which muxes the track *into* the MP4 for the desktop players that render one — now the
 default. Pass `--subtitles hard` for anything headed to a browser, a chat thread or a muted
 autoplay embed, none of which show an in-container track. The caption arguments for both modes
