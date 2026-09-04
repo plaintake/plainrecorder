@@ -8,9 +8,10 @@ description: Use when the user wants to create, record, re-render, or verify a P
 ## Overview
 
 PlainTake turns a committed TypeScript scenario into one deterministic browser demo video —
-1920×1080 @ 30 fps H.264 `demo.mp4` with captions — locally, no network at render time. The
-loop: write the scenario, `validate` (no browser), `run` (records), `verify`; `render`
-re-renders a bundle later without a browser.
+1920×1080 @ 30 fps H.264 `demo.mp4` with captions by default, or 9:16/1:1 via `--aspect`
+(render-time only, never a re-record) — locally, no network at render time. The loop: write
+the scenario, `validate` (no browser), `run` (records), `verify`; `render` re-renders a bundle
+later without a browser.
 
 A scenario file is executed as code. Treat it exactly as you would a test file in the same
 repository.
@@ -35,7 +36,7 @@ them — descriptions self-contained, paths sandboxed to `--workspace`. Otherwis
 |---|---|
 | `plaintake validate <file>` | Check a scenario. No browser. Always first. |
 | `plaintake run <file> --output <dir> (--base-url <url> \| --fixture)` | Record + render. Exactly one target. |
-| `plaintake render <dir> [--subtitles hard\|soft]` | Re-render the frozen plan. No browser. |
+| `plaintake render <dir> [--subtitles hard\|soft] [--aspect 16:9\|9:16\|1:1]` | Re-render the frozen plan. No browser. |
 | `plaintake verify <dir>` | Re-hash every artifact against the manifest. |
 | `plaintake inspect <dir>` | Summarize a bundle — cues, chapters, narration. |
 | `plaintake doctor` / `install-browser` / `install-voice` | Toolchain check / Chromium / voice model. |

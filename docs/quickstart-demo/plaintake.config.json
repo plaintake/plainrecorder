@@ -1,0 +1,10 @@
+{
+  "schema": "plaintake.config/v1",
+  "branding": {
+    "enabled": true,
+    "lines": ["Made with PlainTake"],
+    "backgroundColor": "#1E1B4B",
+    "textColor": "#FFFFFF",
+    "durationMs": 2500
+  }
+}

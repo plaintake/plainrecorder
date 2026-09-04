@@ -4,6 +4,70 @@
 GitHub release notes, so this file is the source of what a customer reads — not a summary
 written afterwards.
 
+## 1.5.0
+
+**Vertical and square demos: `--aspect 9:16` and `--aspect 1:1`.** The finished video can now
+be fitted to a vertical or square feed. The whole 16:9 picture is scaled into a box inside the
+taller frame and the space left over becomes a flat dark band — nothing is cropped away — and
+the captions move off the video and into that band, where they get more room than they have
+ever had over the picture. What gets recorded does not change: capture is always 1920×1080
+whatever you pass, and `16:9` remains the default and produces the video this tool has always
+rendered, byte for byte.
+
+The shape is chosen at render time, so a recording you already have can often be re-cut with
+`plaintake render <bundle> --aspect 9:16` without recording it again — the same property that
+makes switching subtitle modes a re-render rather than a re-record. "Often", because a
+caption's line breaks are chosen at record time against the width of the frame they are drawn
+on: a 16:9 recording whose captions run long enough is refused rather than re-cut into words
+that would run off the edge of the narrower frame, and the refusal names the offending line.
+`run --aspect` from the start always avoids this, because the captions are wrapped for the
+right frame from the first take. A refused re-cut leaves the bundle exactly as it was,
+manifest still verifying; a successful one is a round trip, and `render --aspect 16:9`
+returns the video to its original shape.
+
+**`highlight`: dim everything except the thing you are talking about.** A step can ask for
+the spotlight — `demo.step({ highlight: true })`, or `highlight: { label: 'Click Settings' }`
+to draw a callout beside it — and the render dims the whole frame except the step's target,
+faded in and out rather than snapped. Free on every tier, and it rides the same rails as the
+cursor and the camera: the target rect is measured at record time and frozen into the plan,
+so it renders identically on every re-render. A highlight needs a measurable `target`, and
+when the rect cannot be measured or used the run says so as a diagnostic instead of silently
+rendering nothing.
+
+**`plaintake check`: the loop's fast gate.** `check` runs the same recording and assertion
+pipeline as `run` and stops before the render half — no FFmpeg probe, no encode, no manifest —
+so it succeeds on a CI runner with no FFmpeg installed at all, and it is fast enough for every
+pull request. Same target rules as `run` (`--base-url` or `--fixture`), same exit codes, same
+assertions failing the command.
+
+**`plaintake diff` and `plaintake prune`.** `diff <bundleA> <bundleB>` names the semantic
+drift between two recordings — steps, assertions, target position and name, step timing,
+caption text; no frame comparison — which is the "what changed between last month's demo and
+this one" question a hash match cannot answer. `prune` deletes recorded bundles under the
+working directory, selected by `--older-than`, `--keep-last` and/or `--scenario`, dry-run
+unless `--yes`. It exists on the CLI only: there is no MCP tool for it, ever.
+
+**Narration gets a speed dial and a pronunciation dictionary.** `speech.speed` (0.5–2.0×) is
+a scenario-level setting for the synthesised voice — no per-step override, deliberately — and
+`pronunciations` is a word-boundary substitution applied before synthesis, so a caption can
+keep reading "SQL" while the voice says "sequel". Both sit in the scenario's metadata, both
+are inert when absent, and neither touches a caption's text: only how it is spoken.
+
+**The run log now says at record time what review used to catch too late.** Two silences
+became notes. A camera zoom whose capped window cannot contain its target reports
+`camera.cropped` — how much of which axis falls outside the window — instead of stopping at
+the clamp that named the bound but not the cost. And a step whose declared target is not on
+the page when the step starts reports `target.unmeasured` instead of quietly burning the
+probe's timeout and losing its cursor point and camera shot; that note names the fix, which
+is to navigate between steps rather than inside `run()`.
+
+**A quickstart that PlainTake recorded itself.** The release channel now carries
+`docs/quickstart-demo/` — a sixty-two-second narrated tutorial of the whole loop (install,
+write the scenario, validate, run, watch the bundle), built by `make quickstart-demo` from a
+committed scenario. It is honest by construction: the video the tutorial's player embeds is
+the real output of the exact command it teaches, and the repository's `examples/` gains
+`release-approval.demo.ts`, the flow the tutorial teaches.
+
 ## 1.4.0
 
 **A product's branding now travels with its repository.** The outro branding (Pro) comes from a
@@ -22,9 +86,16 @@ ignored would defeat the point. Your licence stays tied to your machine either w
 config picks *what* branding a run uses, never *whether* it's honoured, and the TUI's settings
 screen is untouched, reading this machine's global config as it always did.
 
-That is the whole release. Branding is decided once at record time and frozen into the plan, so
-every bundle you already have re-renders to exactly the video it did before, and `render`
-still reads nothing but the frozen plan.
+**Long chaptered videos no longer render with scrambled chapters.** A soft-subtitled render —
+the default — whose chapter markers ran past roughly the first 45 seconds came out with its
+chapter list damaged: a title shifted a slot, a span collapsed to nothing, and only a warning
+buried in the log to say so. The fault was a timestamp overflow inside FFmpeg's MP4 muxer,
+reachable only when a soft caption track shares the file with chapters; the soft pass now pins
+the container's clock to the same millisecond precision the chapter data itself is written in,
+and the overflow cannot occur. Unchaptered videos, hard subtitles and the base render are
+untouched, and branding is still decided once at record time and frozen into the plan: a
+chapterless bundle re-renders to exactly the bytes it always did, while a chaptered one
+re-renders to the video it should have produced all along.
 
 ## 1.3.0
 

@@ -91,7 +91,7 @@ Intel build.
 
 ```bash
 # 1. Download the tarball for your platform, the checksums, and the installer
-VERSION=1.4.0
+VERSION=1.5.0
 BASE=https://github.com/plaintake/plaintake/releases/download/v$VERSION
 curl -LO $BASE/plaintake-$VERSION-darwin-arm64.tar.gz   # or -linux-x64
 curl -LO $BASE/SHA256SUMS
@@ -162,11 +162,15 @@ exit — so an agent running `plaintake` never sits waiting on a prompt.
 plaintake validate <scenario.ts>
 plaintake run      <scenario.ts> --output <dir> (--base-url <url> | --fixture)
                                   [--subtitles soft|hard] [--cursor on|off]
-                                  [--camera off|zoom] [--speech off|on|file]
-                                  [--voice <id>] [--config <path>]
-plaintake render   <bundleDir> [--subtitles soft|hard]
+                                  [--camera off|zoom] [--aspect 16:9|9:16|1:1]
+                                  [--speech off|on|file] [--voice <id>]
+                                  [--config <path>]
+plaintake check    <scenario.ts> (--base-url <url> | --fixture) [--output <dir>]
+plaintake render   <bundleDir> [--subtitles soft|hard] [--aspect 16:9|9:16|1:1]
 plaintake verify   <bundleDir>
+plaintake diff     <bundleDirA> <bundleDirB>
 plaintake inspect  <bundleDir>
+plaintake prune    [--older-than <duration>] [--keep-last <n>] [--scenario <id>] [--yes]
 plaintake doctor
 plaintake install-browser
 plaintake install-voice [--voice <id>]... [--all-voices]
@@ -179,9 +183,12 @@ plaintake --version
 |---|---|
 | `validate` | Loads a scenario and checks it, without opening a browser |
 | `run` | Records, times the captions, renders, hashes, and writes a recording |
+| `check` | Records and asserts without rendering — no FFmpeg needed, fast enough for every pull request |
 | `render` | Re-renders from a recording's frozen plan. No browser, no network, no clock |
 | `verify` | Re-hashes every file against the manifest |
+| `diff` | Semantic diff between two bundles — steps, assertions, target position/name, timing and captions. No frame comparison |
 | `inspect` | Reports the video, captions, chapters, output sizes and toolchain. Read-only |
+| `prune` | Deletes recordings under the working directory, selected by age, count or scenario. Dry-run unless `--yes`. No MCP tool |
 | `doctor` | Checks FFmpeg, libass, x264 and the filters that are needed, and reports whether the voice model is installed |
 | `install-voice` | Downloads the voice model `--speech on` needs. Once, and only if you want narration |
 | `activate` | Verifies a licence key with Gumroad once and saves it locally. Headless alternative to the TUI's *Enter a licence key* |
@@ -200,6 +207,19 @@ computed from the recorded steps — the same ones the captions and chapters com
 frozen into the plan alongside them, so it is as repeatable as everything else here and no
 model chose it. `off`, the default, films the raw viewport. Captions and the closing card
 never zoom either way.
+
+`--aspect 9:16` (or `1:1`) fits the finished video to a vertical or square feed. The whole 16:9
+picture is scaled into a box inside the taller frame and the space left over becomes a flat dark
+band — nothing is cropped away — and the captions move off the video and into that band, where
+they get more room than they have ever had over the picture. What gets recorded does not change:
+capture is always 1920×1080 whatever you pass, and `16:9` is the default and the video this tool
+has always rendered. Since the shape is chosen at render time, a recording you already have can
+often be re-cut with `plaintake render <bundleDir> --aspect 9:16` without recording it again — the
+same thing that makes switching subtitle modes a re-render rather than a re-record. "Often"
+because a caption line is wrapped to fit its frame at record time, and the letterboxed frame is
+narrower: a 16:9 recording whose captions run long enough is refused rather than re-cut into
+words that would run off the edge, naming the offending line. `run --aspect` from the start always
+avoids this, because the captions are wrapped for the right frame from the first take.
 
 Recording for more than one product? Commit a `plaintake.config.json` at each product's repo
 root with its own outro branding (Pro) — `run` finds the nearest one walking up from the
@@ -349,13 +369,17 @@ Stated up front rather than discovered later:
 
 - **The only sound is the captions read aloud** — no microphone, no page audio, no system
   audio, no music, no sound effects. `--speech on` needs a one-time 93 MB voice-model
-  download. There are 28 English voices and no per-voice tuning, no speed control and no
-  per-step override; the pronunciation dictionary is US English only, so a non-English scenario
+  download. There are 28 English voices and no per-voice tuning; speed is a scenario-level
+  `speech.speed` dial (0.5–2.0×), not a per-step or per-voice one, and there is no per-step
+  override; the pronunciation dictionary is US English only, so a non-English scenario
   gets captions and no voice rather than an accent reading the wrong sounds. A video that talks
   is longer than the same demo recorded silent, because each step waits for its line to finish.
 - **macOS arm64 and Linux x64 only.** No Windows build. No macOS Intel build.
 - **Chromium only**, one tab, one page.
-- **Fixed 1920×1080 at 30 fps.** No other resolutions or aspect ratios.
+- **Capture is always 1920×1080 at 30 fps.** No other capture size, no other frame rate.
+  `--aspect` changes the shape of the finished video and nothing else: `9:16` and `1:1`
+  letterbox that same capture instead of cropping it, and leaving the flag off gives you the
+  16:9 video this tool has always produced.
 - **The cursor is optional and synthetic.** `--cursor on` draws one pointer shape with click
   ripples, generated from the scenario's targets — it is not your real mouse, there are no
   styles to configure, and `off` (the default) films none.
@@ -374,7 +398,9 @@ Stated up front rather than discovered later:
 - **A handoff opens a visible browser**, which draws text on slightly different pixels than the
   headless one and asks for `/favicon.ico`. An app without a favicon logs a 404 that fails the
   run; the recorder log explains it, and `allowedConsoleErrors` is where you silence it.
-- **Nothing prunes old recordings.** Deleting is a deliberate act.
+- **Nothing prunes old recordings on its own.** `plaintake prune` deletes on request — dry-run
+  unless you pass `--yes` — but there is no automatic retention policy and no MCP tool for it.
+  Deleting is a deliberate act, whether that is the TUI's confirmation or `--yes` on the CLI.
 - The licence check runs on your own machine in a binary you hold, so it is
   tamper-*evident*, not tamper-proof. It is a receipt, not a lock, and a licensing failure
   never blocks a recording — it falls back to the free tier and says why.
