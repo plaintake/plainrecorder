@@ -37,8 +37,8 @@ on a white page is hard to read no matter how thick the outline. It is slightly 
 so the page still shows through and the caption reads as part of the video.
 
 Captions are burned into the pixels, which is what makes them show up in a browser, in Slack
-and in a muted autoplay embed. A licence also lets you export a selectable caption track
-instead, for desktop players.
+and in a muted autoplay embed. `--subtitles soft` exports a selectable caption track instead,
+for desktop players — free on every tier.
 
 ## The closing card
 
@@ -52,11 +52,13 @@ recording produces the same bytes on any machine, licensed or not.
 ## Chapters are not shown here
 
 A still cannot show them. Chapter markers are container metadata, not pixels: an MP4 with
-chapters and one without decode to identical frames. To see them, record with a licence and
-read them back:
+chapters and one without decode to identical frames. Chapters are free on every tier; read
+them back from any recording:
 
 ```bash
 ffprobe -v error -show_chapters demo/output/demo.mp4
 ```
 
-These stills come from a **free tier** recording, so it has the credit card and no chapters.
+These particular stills were recorded while chapters needed a licence, so the bundle has the
+credit card and no chapters. Record the example yourself and the chapters are there — the
+credit is the only thing a licence still removes.

@@ -4,6 +4,24 @@
 GitHub release notes, so this file is the source of what a customer reads — not a summary
 written afterwards.
 
+## 1.6.0
+
+**MP4 chapter markers are free on every tier.** A licence no longer buys the chapter
+navigation — `demo.chapter()` is unchanged, and every recording now carries its markers in
+the MP4 whatever tier made it, alongside the credit card that still marks the Free Tier.
+Camera zoom and credit-removal/custom-outro remain what a licence buys.
+
+The gate was deleted rather than stubbed to `true`, following the 1.3.0 change that made
+narration and the soft caption track free, so there is no `chaptersEnabled` left to quietly
+turn back on: the recorder derives the marks from the `chapter` events it has always
+recorded, and the licence is never consulted.
+
+**One caveat for existing bundles: chapters freeze at record time like everything else.** A
+bundle recorded on 1.5.0 or earlier has no chapter marks in its frozen plan and re-renders
+without them on 1.6.0 — exactly as it did before. To add chapters to a demo you recorded
+while they were paid, record it again; the events were in the timeline all along, so nothing
+about the scenario needs to change.
+
 ## 1.5.0
 
 **Vertical and square demos: `--aspect 9:16` and `--aspect 1:1`.** The finished video can now

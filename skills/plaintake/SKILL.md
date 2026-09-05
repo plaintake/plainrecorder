@@ -53,8 +53,8 @@ them — descriptions self-contained, paths sandboxed to `--workspace`. Otherwis
 **never acts**; `run` does the work), `assert`, `chapter`, `mask`, `waitFor`, `pause`,
 `handoff` (a person takes the browser).
 
-Recording, rendering, MCP, narration and both caption modes are free on every tier; a licence
-buys MP4 chapter markers, camera zoom and credit removal/custom outro (`plaintake licence`
+Recording, rendering, MCP, narration, both caption modes and MP4 chapter markers are free on
+every tier; a licence buys camera zoom and credit removal/custom outro (`plaintake licence`
 prints where you stand). Custom outro branding comes from `config.json`: `--config <path>` if
 given, else the nearest `plaintake.config.json` walking up from the working directory (commit
 one per product repo), else `~/.config/plaintake/config.json`.

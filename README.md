@@ -91,7 +91,7 @@ Intel build.
 
 ```bash
 # 1. Download the tarball for your platform, the checksums, and the installer
-VERSION=1.5.0
+VERSION=1.6.0
 BASE=https://github.com/plaintake/plaintake/releases/download/v$VERSION
 curl -LO $BASE/plaintake-$VERSION-darwin-arm64.tar.gz   # or -linux-x64
 curl -LO $BASE/SHA256SUMS
@@ -328,7 +328,7 @@ Recordings panel in the menu is how you do that.
 | Selectable caption track as well as burned-in | ✅ | ✅ |
 | Closing credit card | 3s *Made with PlainTake* | removed |
 | Your own outro text and colours | ❌ | ✅ |
-| MP4 chapter markers from `demo.chapter()` | ❌ | ✅ |
+| MP4 chapter markers from `demo.chapter()` | ✅ | ✅ |
 | Camera that zooms toward each step's target | ❌ | ✅ |
 | Price | free | one-time, perpetual |
 
@@ -340,13 +340,14 @@ Then `plaintake` → *Licence* → *Enter a licence key*, or headlessly with
 answer; nothing afterwards touches the network. `plaintake licence` prints the current state.
 One payment, no subscription, and install it on as many of your own machines as you need.
 
-**Chapter events are recorded on every tier.** Only the markers in the MP4 are withheld, so
-nothing is lost by recording on Free and activating later — re-render and the chapters appear.
+**Chapter markers are free on every tier.** They come only from `demo.chapter()` calls and are
+frozen into the recording as it is made — a demo recorded while chapters needed a licence
+re-renders without them, so record it again to add chapters.
 
-**The camera is the one thing that does not work that way,** and it is better said here than
-found out later: the shot list is worked out and frozen while the recording is made, so a
-recording made on Free has none, and re-rendering it cannot add one. If you want the zoom on a
-demo you already recorded, record it again.
+**The camera is the one capability that still needs a licence,** and it freezes the same way:
+the shot list is worked out while the recording is made, so a recording made on Free has none,
+and re-rendering it cannot add one. If you want the zoom on a demo you already recorded,
+record it again.
 
 **Narration is free on every tier,** in both modes. `--speech on` reads your captions aloud with
 a local voice model, `--speech file` speaks WAVs you supply, and neither needs a licence — a
